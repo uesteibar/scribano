@@ -1,0 +1,12 @@
+---
+version: '3'
+services:
+  rabbit:
+     hostname: rabbit
+     image: rabbitmq
+     command: "rabbitmq-server"
+     healthcheck:
+       test: ["CMD", "rabbitmqctl", "node_health_check"]
+     ports:
+       - "5672:5672"
+       - "15672:15672"
