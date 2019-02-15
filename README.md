@@ -1,4 +1,4 @@
-# Thoth
+# AsyncAPI watcher
 
 ## Running locally
 
