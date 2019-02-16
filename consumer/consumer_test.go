@@ -14,26 +14,25 @@ func produce(t *testing.T) {
 	ch, _ := conn.Channel()
 	defer ch.Close()
 	q, _ := ch.QueueDeclare("test.key", false, false, false, false, nil)
-	p := amqp.Publishing{
-		ContentType: "text/plain",
-		Body:        []byte("Testing world"),
-	}
+	p := amqp.Publishing{ContentType: "text/plain", Body: []byte("Testing world")}
 	_ = ch.Publish("", q.Name, false, false, p)
 }
 
 func TestConsumer(t *testing.T) {
-	ch := make(chan amqp.Delivery)
+	ch := make(chan Message)
 	c := Consumer{
 		Host:       "amqp://guest:guest@localhost",
 		RoutingKey: "test.key",
-		ch:         ch,
+		Ch:         ch,
 	}
 
 	produce(t)
 
 	go c.Consume()
 
-	d, _ := <-ch
+	msg, _ := <-ch
 
-	assert.Equal(t, "Testing world", string(d.Body))
+	assert.Equal(t, "Testing world", string(msg.Body))
+	assert.Equal(t, "test.key", string(msg.RoutingKey))
+	assert.Equal(t, "text/plain", string(msg.ContentType))
 }

@@ -14,7 +14,21 @@ func failOnError(err error, msg string) {
 type Consumer struct {
 	Host       string
 	RoutingKey string
-	ch         chan amqp.Delivery
+	Ch         chan Message
+}
+
+type Message struct {
+	Body        []byte
+	ContentType string
+	RoutingKey  string
+}
+
+func transformMessage(msg amqp.Delivery) Message {
+	return Message{
+		Body:        msg.Body,
+		ContentType: msg.ContentType,
+		RoutingKey:  msg.RoutingKey,
+	}
 }
 
 func (c *Consumer) Consume() {
@@ -50,8 +64,7 @@ func (c *Consumer) Consume() {
 
 	go func() {
 		for d := range msgs {
-			log.Printf("Received a message: %s", d.Body)
-			c.ch <- d
+			c.Ch <- transformMessage(d)
 		}
 	}()
 
