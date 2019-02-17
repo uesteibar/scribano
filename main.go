@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/streadway/amqp"
-	"github.com/uesteibar/asyncapi-watcher/analyzer"
+	"github.com/uesteibar/asyncapi-watcher/asyncapi/analyzer"
+	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/consumer"
 )
 
@@ -35,7 +36,7 @@ func main() {
 	}
 	go c.Consume()
 
-	chOut := make(chan analyzer.MessageSpec)
+	chOut := make(chan spec.MessageSpec)
 	a := analyzer.Analyzer{ChIn: ch, ChOut: chOut}
 	go a.Watch()
 

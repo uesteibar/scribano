@@ -2,6 +2,7 @@ package analyzer
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/consumer"
 	"testing"
 	"time"
@@ -9,7 +10,7 @@ import (
 
 func TestAnalyze_JSON(t *testing.T) {
 	chIn := make(chan consumer.Message)
-	chOut := make(chan MessageSpec)
+	chOut := make(chan spec.MessageSpec)
 
 	a := Analyzer{ChIn: chIn, ChOut: chOut}
 	go a.Watch()
@@ -28,20 +29,23 @@ func TestAnalyze_JSON(t *testing.T) {
 	}
 	select {
 	case res, _ := <-chOut:
-		expected := MessageSpec{
+		expected := spec.MessageSpec{
 			Topic: "test.routing.key",
-			Fields: []FieldSpec{
-				FieldSpec{
-					Name: "name",
-					Type: "string",
-				},
-				FieldSpec{
-					Name: "age",
-					Type: "float64",
-				},
-				FieldSpec{
-					Name: "canDrive",
-					Type: "boolean",
+			Payload: spec.PayloadSpec{
+				Type: "object",
+				Fields: []spec.FieldSpec{
+					spec.FieldSpec{
+						Name: "name",
+						Type: "string",
+					},
+					spec.FieldSpec{
+						Name: "age",
+						Type: "float64",
+					},
+					spec.FieldSpec{
+						Name: "canDrive",
+						Type: "boolean",
+					},
 				},
 			},
 		}
@@ -55,7 +59,7 @@ func TestAnalyze_JSON(t *testing.T) {
 
 func TestAnalyze_UnknownFormat(t *testing.T) {
 	chIn := make(chan consumer.Message)
-	chOut := make(chan MessageSpec)
+	chOut := make(chan spec.MessageSpec)
 
 	a := Analyzer{ChIn: chIn, ChOut: chOut}
 	go a.Watch()

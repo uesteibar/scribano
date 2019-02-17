@@ -3,31 +3,22 @@ package analyzer
 import (
 	"errors"
 	"fmt"
+	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/consumer"
 )
 
 const JsonContentType = "application/json"
 
-type MessageAnalyzer interface {
-	BuildSpec(consumer.Message) MessageSpec
-}
-
-type MessageSpec struct {
-	Topic  string
-	Fields []FieldSpec
-}
-
-type FieldSpec struct {
-	Name string
-	Type string
+type PayloadAnalyzer interface {
+	GetPayloadSpec([]byte) spec.PayloadSpec
 }
 
 type Analyzer struct {
 	ChIn  chan consumer.Message
-	ChOut chan MessageSpec
+	ChOut chan spec.MessageSpec
 }
 
-func getAnalyzer(msg consumer.Message) (MessageAnalyzer, error) {
+func getPayloadAnalyzer(msg consumer.Message) (PayloadAnalyzer, error) {
 	switch msg.ContentType {
 	case JsonContentType:
 		return JsonAnalyzer{}, nil
@@ -38,14 +29,17 @@ func getAnalyzer(msg consumer.Message) (MessageAnalyzer, error) {
 	}
 }
 
-func analyze(msg consumer.Message) (MessageSpec, error) {
-	a, err := getAnalyzer(msg)
+func analyze(msg consumer.Message) (spec.MessageSpec, error) {
+	a, err := getPayloadAnalyzer(msg)
 	if err != nil {
-		return MessageSpec{}, errors.New(
+		return spec.MessageSpec{}, errors.New(
 			fmt.Sprintf("Couldn't analyze message: %+v", msg),
 		)
 	}
-	return a.BuildSpec(msg), nil
+	return spec.MessageSpec{
+		Topic:   msg.RoutingKey,
+		Payload: a.GetPayloadSpec(msg.Body),
+	}, nil
 }
 
 func (a *Analyzer) Watch() {
