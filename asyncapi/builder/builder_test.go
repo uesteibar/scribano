@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
+	"strings"
 	"testing"
 )
 
@@ -48,7 +49,28 @@ func TestSpecBuilder(t *testing.T) {
 
 	json, _ := json.Marshal(res)
 
-	expectedJson := `{"components":{"messages":{"SomeTopic":{"payload":{"type":"object","properties":{"age":{"type":"float64"},"name":{"type":"string"}}}}}}}`
+	expectedJson := `{
+		"components":{
+			"messages":{
+				"SomeTopic":{
+					"payload":{
+						"type":"object",
+						"properties":{
+							"age":{
+								"type":"float64"
+							},
+							"name":{
+								"type":"string"
+							}
+						}
+					}
+				}
+			}
+		}
+	}`
+
+	expectedJson = strings.Replace(expectedJson, "\n", "", -1)
+	expectedJson = strings.Replace(expectedJson, "\t", "", -1)
 
 	assert.Equal(t, expectedJson, string(json))
 }
