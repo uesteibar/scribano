@@ -24,7 +24,7 @@ func (a JsonAnalyzer) GetPayloadSpec(payload []byte) spec.PayloadSpec {
 func typeof(v interface{}) string {
 	switch v.(type) {
 	case float64:
-		return "float64"
+		return "float"
 	case string:
 		return "string"
 	case bool:

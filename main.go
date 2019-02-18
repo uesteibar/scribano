@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/streadway/amqp"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/analyzer"
+	"github.com/uesteibar/asyncapi-watcher/asyncapi/builder"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/consumer"
 )
@@ -42,6 +44,16 @@ func main() {
 
 	produce()
 
-	spec := <-chOut
-	fmt.Printf("Received: %+v\n", spec)
+	msg := <-chOut
+	fmt.Printf("Received: %+v\n", msg)
+
+	b := builder.SpecBuilder{}
+	b.AddMessage(msg)
+
+	res := b.Build()
+
+	fmt.Printf("Build: %+v\n", res)
+	encoded, _ := json.Marshal(res)
+
+	fmt.Printf("Encoded: %+s\n", encoded)
 }

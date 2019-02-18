@@ -17,7 +17,7 @@ func TestSpecBuilder(t *testing.T) {
 			Type: "object",
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "float64"},
+				spec.FieldSpec{Name: "age", Type: "float"},
 			},
 		},
 	}
@@ -42,7 +42,7 @@ func TestSpecBuilder(t *testing.T) {
 								Type: "string",
 							},
 							"age": Property{
-								Type: "float64",
+								Type: "float",
 							},
 						},
 					},
@@ -73,7 +73,7 @@ func TestSpecBuilder(t *testing.T) {
 						"type":"object",
 						"properties": {
 							"age": {
-								"type":"float64"
+								"type":"float"
 							},
 							"name": {
 								"type":"string"

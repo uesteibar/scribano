@@ -40,7 +40,7 @@ func TestAnalyze_JSON(t *testing.T) {
 					},
 					spec.FieldSpec{
 						Name: "age",
-						Type: "float64",
+						Type: "float",
 					},
 					spec.FieldSpec{
 						Name: "canDrive",
