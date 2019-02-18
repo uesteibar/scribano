@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"fmt"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"strings"
 )
@@ -22,8 +23,18 @@ type Components struct {
 	Messages map[string]Message `json:"messages"`
 }
 
+type Ref struct {
+	RefKey string `json:"$ref"`
+}
+
+type Topic struct {
+	Subscribe Ref `json:"subscribe"`
+	Publish   Ref `json:"publish"`
+}
+
 type AsyncAPISpec struct {
-	Components Components `json:"components"`
+	Topics     map[string]Topic `json:"topics"`
+	Components Components       `json:"components"`
 }
 
 type SpecBuilder struct {
@@ -57,11 +68,17 @@ func msgName(msg spec.MessageSpec) string {
 	return strings.Join(pieces, "")
 }
 
+func refFor(msg spec.MessageSpec) Ref {
+	return Ref{RefKey: fmt.Sprintf("#/components/messages/%s", msgName(msg))}
+}
+
 func (b *SpecBuilder) AddMessage(msg spec.MessageSpec) *SpecBuilder {
 	if b.Spec.Components.Messages == nil {
 		b.Spec.Components.Messages = make(map[string]Message)
 	}
 
+	b.Spec.Topics = make(map[string]Topic)
+	b.Spec.Topics[msg.Topic] = Topic{Subscribe: refFor(msg), Publish: refFor(msg)}
 	b.Spec.Components.Messages[msgName(msg)] = buildMsg(msg)
 	return b
 }
