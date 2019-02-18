@@ -2,14 +2,9 @@
 
 ## Running locally
 
-Install [govendor](https://github.com/kardianos/govendor)
-```
-go get github.com/kardianos/govendor
-```
-
 Install dependencies
 ```
-govendor sync
+go mod download
 ```
 
 ### Running tests
