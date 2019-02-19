@@ -6,11 +6,11 @@ type MessageSpec struct {
 }
 
 type PayloadSpec struct {
-	Type   string
-	Fields []FieldSpec
+	Type   string      `json:"type"`
+	Fields []FieldSpec `json:"fields"`
 }
 
 type FieldSpec struct {
-	Name string
-	Type string
+	Name string `json:"name"`
+	Type string `json:"type"`
 }
