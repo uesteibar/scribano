@@ -2,21 +2,29 @@ package messages_repo
 
 import (
 	"encoding/json"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
 )
 
 type MessageSpec struct {
-	gorm.Model
-
-	Topic   string
+	Topic   string `gorm:"primary_key"`
 	Payload []byte
 }
 
 type MessagesRepo struct {
 	db db.Database
+}
+
+type ErrNotFound struct {
+	message string
+}
+
+func NewErrNotFound() *ErrNotFound {
+	return &ErrNotFound{}
+}
+func (e *ErrNotFound) Error() string {
+	return "NOT_FOUND"
 }
 
 func New(db db.Database) *MessagesRepo {
@@ -28,37 +36,51 @@ func (r *MessagesRepo) Migrate() {
 	conn.AutoMigrate(&MessageSpec{})
 }
 
+func transformMsg(msg spec.MessageSpec) (MessageSpec, error) {
+	payload, err := json.Marshal(msg.Payload)
+
+	if err != nil {
+		return MessageSpec{}, err
+	}
+
+	return MessageSpec{Topic: msg.Topic, Payload: payload}, nil
+}
+
 func (r *MessagesRepo) Create(msg spec.MessageSpec) error {
 	conn := r.db.Open()
 	defer conn.Close()
 
-	payload, err := json.Marshal(msg.Payload)
-
-	if err != nil {
+	if m, err := transformMsg(msg); err != nil {
 		return err
+	} else {
+		return conn.Create(&m).Error
 	}
-
-	conn.Create(&MessageSpec{
-		Topic:   msg.Topic,
-		Payload: payload,
-	})
-	return nil
 }
 
-func (r *MessagesRepo) Find(topic string) spec.MessageSpec {
+func (r *MessagesRepo) Find(topic string) (spec.MessageSpec, error) {
 	conn := r.db.Open()
 	defer conn.Close()
 
 	var m MessageSpec
-	conn.First(&m, "topic = ?", topic)
+	if err := conn.First(&m, "topic = ?", topic).Error; err == nil {
+		var p spec.PayloadSpec
+		json.Unmarshal(m.Payload, &p)
 
-	var p spec.PayloadSpec
-	json.Unmarshal(m.Payload, &p)
+		messageSpec := spec.MessageSpec{Topic: m.Topic, Payload: p}
 
-	messageSpec := spec.MessageSpec{
-		Topic:   m.Topic,
-		Payload: p,
+		return messageSpec, nil
+	} else {
+		return spec.MessageSpec{}, NewErrNotFound()
 	}
+}
 
-	return messageSpec
+func (r *MessagesRepo) Update(msg spec.MessageSpec) error {
+	conn := r.db.Open()
+	defer conn.Close()
+
+	if m, err := transformMsg(msg); err != nil {
+		return err
+	} else {
+		return conn.Save(&m).Error
+	}
 }

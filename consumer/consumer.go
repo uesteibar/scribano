@@ -64,6 +64,7 @@ func (c *Consumer) Consume() {
 
 	go func() {
 		for d := range msgs {
+			log.Printf("Received: %+v", d)
 			c.Ch <- transformMessage(d)
 		}
 	}()
