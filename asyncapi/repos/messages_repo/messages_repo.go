@@ -7,6 +7,8 @@ import (
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
 )
 
+const gormNotFound = "record not found"
+
 type MessageSpec struct {
 	Topic   string `gorm:"primary_key"`
 	Payload []byte
@@ -76,9 +78,10 @@ func (r *MessagesRepo) Find(topic string) (spec.MessageSpec, error) {
 		messageSpec := spec.MessageSpec{Topic: m.Topic, Payload: p}
 
 		return messageSpec, nil
-	} else {
-		// TODO: check if err is actually not found
+	} else if err.Error() == gormNotFound {
 		return spec.MessageSpec{}, NewErrNotFound()
+	} else {
+		return spec.MessageSpec{}, err
 	}
 }
 
@@ -97,9 +100,10 @@ func (r *MessagesRepo) FindAll() ([]spec.MessageSpec, error) {
 		}
 
 		return messageSpecs, nil
-	} else {
-		// TODO: check if err is actually not found
+	} else if err.Error() == gormNotFound {
 		return []spec.MessageSpec{}, NewErrNotFound()
+	} else {
+		return []spec.MessageSpec{}, err
 	}
 }
 
