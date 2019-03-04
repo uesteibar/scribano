@@ -24,7 +24,7 @@ func produce(topic, body string) {
 }
 
 func TestEndToEnd(t *testing.T) {
-	repo := messages_repo.New(db.TestDB{})
+	repo := messages_repo.New(db.DB{})
 	repo.Migrate()
 	body := `
 		{
@@ -39,7 +39,7 @@ func TestEndToEnd(t *testing.T) {
 
 	go Watch()
 
-	time.Sleep(time.Duration(1000000) * 1000)
+	time.Sleep(time.Duration(100000) * 1000)
 
 	expected := spec.MessageSpec{
 		Topic: topic,

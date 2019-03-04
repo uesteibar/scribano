@@ -13,7 +13,7 @@ func Watch() {
 	chConsumed := make(chan consumer.Message)
 	c := consumer.Consumer{
 		Host:       "amqp://guest:guest@localhost",
-		RoutingKey: "#",
+		RoutingKey: "key.test",
 		Ch:         chConsumed,
 	}
 
@@ -26,7 +26,7 @@ func Watch() {
 	go a.Watch()
 
 	chPersisted := make(chan spec.MessageSpec)
-	p := persister.New(chAnalyzed, chPersisted, db.TestDB{})
+	p := persister.New(chAnalyzed, chPersisted, db.DB{})
 	p.Watch()
 
 	for msg := range chPersisted {

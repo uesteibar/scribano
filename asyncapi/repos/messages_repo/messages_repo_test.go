@@ -9,7 +9,7 @@ import (
 )
 
 func TestRepo(t *testing.T) {
-	repo := New(db.TestDB{})
+	repo := New(db.GetUniqueDB())
 	repo.Migrate()
 
 	topic := uuid.New().String()
@@ -55,4 +55,32 @@ func TestRepo(t *testing.T) {
 	assert.Nil(t, err)
 	um, _ := repo.Find(topic)
 	assert.Equal(t, m, um)
+}
+
+func TestFindAll(t *testing.T) {
+	repo := New(db.GetUniqueDB())
+	repo.Migrate()
+
+	msg1 := spec.MessageSpec{
+		Topic: uuid.New().String(),
+		Payload: spec.PayloadSpec{
+			Type:   "object",
+			Fields: []spec.FieldSpec{},
+		},
+	}
+	repo.Create(msg1)
+
+	msg2 := spec.MessageSpec{
+		Topic: uuid.New().String(),
+		Payload: spec.PayloadSpec{
+			Type:   "object",
+			Fields: []spec.FieldSpec{},
+		},
+	}
+	repo.Create(msg2)
+
+	msgs, err := repo.FindAll()
+	var expectedMsgs []spec.MessageSpec = []spec.MessageSpec{msg1, msg2}
+	assert.Nil(t, err)
+	assert.Equal(t, expectedMsgs, msgs)
 }

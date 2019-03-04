@@ -46,6 +46,13 @@ func transformMsg(msg spec.MessageSpec) (MessageSpec, error) {
 	return MessageSpec{Topic: msg.Topic, Payload: payload}, nil
 }
 
+func transformToMsg(msg MessageSpec) spec.MessageSpec {
+	var p spec.PayloadSpec
+	json.Unmarshal(msg.Payload, &p)
+
+	return spec.MessageSpec{Topic: msg.Topic, Payload: p}
+}
+
 func (r *MessagesRepo) Create(msg spec.MessageSpec) error {
 	conn := r.db.Open()
 	defer conn.Close()
@@ -70,7 +77,29 @@ func (r *MessagesRepo) Find(topic string) (spec.MessageSpec, error) {
 
 		return messageSpec, nil
 	} else {
+		// TODO: check if err is actually not found
 		return spec.MessageSpec{}, NewErrNotFound()
+	}
+}
+
+func (r *MessagesRepo) FindAll() ([]spec.MessageSpec, error) {
+	conn := r.db.Open()
+	defer conn.Close()
+	var msgs []MessageSpec
+
+	if err := conn.Find(&msgs).Error; err == nil {
+		var messageSpecs []spec.MessageSpec
+
+		for _, m := range msgs {
+			msg := transformToMsg(m)
+			messageSpecs = append(messageSpecs, msg)
+
+		}
+
+		return messageSpecs, nil
+	} else {
+		// TODO: check if err is actually not found
+		return []spec.MessageSpec{}, NewErrNotFound()
 	}
 }
 

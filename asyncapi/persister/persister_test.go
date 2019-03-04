@@ -11,11 +11,12 @@ import (
 )
 
 func TestPersist(t *testing.T) {
-	repo := messages_repo.New(db.TestDB{})
+	database := db.GetUniqueDB()
+	repo := messages_repo.New(database)
 	repo.Migrate()
 	chIn := make(chan spec.MessageSpec)
 	chOut := make(chan spec.MessageSpec)
-	p := New(chIn, chOut, db.TestDB{})
+	p := New(chIn, chOut, database)
 	go p.Watch()
 
 	topic := uuid.New().String()
