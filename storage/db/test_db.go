@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 )

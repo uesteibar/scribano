@@ -1,21 +1,23 @@
 package consumer
 
 import (
+	"testing"
+	"time"
+
 	"github.com/streadway/amqp"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 const AMQPHost = "amqp://guest:guest@localhost"
 
-func produce(t *testing.T) {
+func produce(topic, body string) {
 	conn, _ := amqp.Dial(AMQPHost)
 	defer conn.Close()
 	ch, _ := conn.Channel()
 	defer ch.Close()
-	q, _ := ch.QueueDeclare("test.key", false, false, false, false, nil)
-	p := amqp.Publishing{ContentType: "text/plain", Body: []byte("Testing world")}
-	_ = ch.Publish("", q.Name, false, false, p)
+	_ = ch.ExchangeDeclare("/", "topic", true, false, false, false, nil)
+	p := amqp.Publishing{ContentType: "text/plain", Body: []byte(body)}
+	_ = ch.Publish("/", topic, false, false, p)
 }
 
 func TestConsumer(t *testing.T) {
@@ -26,13 +28,16 @@ func TestConsumer(t *testing.T) {
 		Ch:         ch,
 	}
 
-	produce(t)
+	produce("test.key", "Testing world")
 
 	go c.Consume()
 
-	msg, _ := <-ch
-
-	assert.Equal(t, "Testing world", string(msg.Body))
-	assert.Equal(t, "test.key", string(msg.RoutingKey))
-	assert.Equal(t, "text/plain", string(msg.ContentType))
+	select {
+	case msg, _ := <-ch:
+		assert.Equal(t, "Testing world", string(msg.Body))
+		assert.Equal(t, "test.key", string(msg.RoutingKey))
+		assert.Equal(t, "text/plain", string(msg.ContentType))
+	case <-time.After(time.Second):
+		t.Error("Expected to receive message, received nothing")
+	}
 }

@@ -3,6 +3,7 @@ package analyzer
 import (
 	"errors"
 	"fmt"
+
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/consumer"
 )

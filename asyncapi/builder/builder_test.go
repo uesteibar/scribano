@@ -2,10 +2,11 @@ package builder
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 )
 
 func TestSpecBuilder(t *testing.T) {

@@ -2,8 +2,9 @@ package builder
 
 import (
 	"fmt"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"strings"
+
+	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 )
 
 type Property struct {

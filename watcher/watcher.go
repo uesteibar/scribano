@@ -1,12 +1,13 @@
 package watcher
 
 import (
+	"log"
+
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/analyzer"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/persister"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/consumer"
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
-	"log"
 )
 
 func Watch() {

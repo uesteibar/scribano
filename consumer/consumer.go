@@ -1,8 +1,9 @@
 package consumer
 
 import (
-	"github.com/streadway/amqp"
 	"log"
+
+	"github.com/streadway/amqp"
 )
 
 func failOnError(err error, msg string) {
@@ -40,6 +41,17 @@ func (c *Consumer) Consume() {
 	failOnError(err, "Failed to open a channel")
 	defer ch.Close()
 
+	err = ch.ExchangeDeclare(
+		"/",     // name
+		"topic", // type
+		true,    // durable
+		false,   // auto-deleted
+		false,   // internal
+		false,   // no-wait
+		nil,     // arguments
+	)
+	failOnError(err, "Failed to declare an exchange")
+
 	q, err := ch.QueueDeclare(
 		c.RoutingKey, // name
 		false,        // durable
@@ -49,6 +61,14 @@ func (c *Consumer) Consume() {
 		nil,          // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
+
+	err = ch.QueueBind(
+		q.Name,       // queue name
+		c.RoutingKey, // routing key
+		"/",          // exchange
+		false,
+		nil)
+	failOnError(err, "Failed to bind a queue")
 
 	msgs, err := ch.Consume(
 		q.Name, // queue

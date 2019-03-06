@@ -1,11 +1,12 @@
 package messages_repo
 
 import (
+	"testing"
+
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
-	"testing"
 )
 
 func TestRepo(t *testing.T) {

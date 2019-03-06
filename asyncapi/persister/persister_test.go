@@ -1,13 +1,14 @@
 package persister
 
 import (
+	"testing"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/repos/messages_repo"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
-	"testing"
-	"time"
 )
 
 func TestPersist(t *testing.T) {
@@ -27,7 +28,7 @@ func TestPersist(t *testing.T) {
 			Type: "object",
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "float"},
+				spec.FieldSpec{Name: "age", Type: "number"},
 			},
 		},
 	}
@@ -48,7 +49,7 @@ func TestPersist(t *testing.T) {
 			Type: "object",
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "number"},
+				spec.FieldSpec{Name: "age", Type: "string"},
 			},
 		},
 	}

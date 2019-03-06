@@ -2,6 +2,7 @@ package messages_repo
 
 import (
 	"encoding/json"
+
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
@@ -96,7 +97,6 @@ func (r *MessagesRepo) FindAll() ([]spec.MessageSpec, error) {
 		for _, m := range msgs {
 			msg := transformToMsg(m)
 			messageSpecs = append(messageSpecs, msg)
-
 		}
 
 		return messageSpecs, nil

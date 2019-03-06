@@ -1,14 +1,15 @@
 package watcher
 
 import (
+	"testing"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/streadway/amqp"
 	"github.com/stretchr/testify/assert"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/repos/messages_repo"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
-	"testing"
-	"time"
 )
 
 const AMQPHost = "amqp://guest:guest@localhost"
@@ -18,9 +19,9 @@ func produce(topic, body string) {
 	defer conn.Close()
 	ch, _ := conn.Channel()
 	defer ch.Close()
-	q, _ := ch.QueueDeclare(topic, false, false, false, false, nil)
+	_ = ch.ExchangeDeclare("/", "topic", true, false, false, false, nil)
 	p := amqp.Publishing{ContentType: "application/json", Body: []byte(body)}
-	_ = ch.Publish("", q.Name, false, false, p)
+	_ = ch.Publish("/", topic, false, false, p)
 }
 
 func TestEndToEnd(t *testing.T) {
@@ -47,7 +48,7 @@ func TestEndToEnd(t *testing.T) {
 			Type: "object",
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "float"},
+				spec.FieldSpec{Name: "age", Type: "number"},
 				spec.FieldSpec{Name: "canDrive", Type: "boolean"},
 			},
 		},

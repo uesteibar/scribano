@@ -1,11 +1,12 @@
 package analyzer
 
 import (
+	"testing"
+	"time"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 	"github.com/uesteibar/asyncapi-watcher/consumer"
-	"testing"
-	"time"
 )
 
 func TestAnalyze_JSON(t *testing.T) {
@@ -40,7 +41,7 @@ func TestAnalyze_JSON(t *testing.T) {
 					},
 					spec.FieldSpec{
 						Name: "age",
-						Type: "float",
+						Type: "number",
 					},
 					spec.FieldSpec{
 						Name: "canDrive",
