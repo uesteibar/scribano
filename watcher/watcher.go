@@ -14,7 +14,7 @@ func Watch() {
 	chConsumed := make(chan consumer.Message)
 	c := consumer.Consumer{
 		Host:       "amqp://guest:guest@localhost",
-		RoutingKey: "key.test",
+		RoutingKey: "#",
 		Ch:         chConsumed,
 	}
 
