@@ -8,12 +8,12 @@ compliant documenation served at `/asyncapi`.
 
 ## Roadmap
 
-- [ ] Add info and server sections to spec to make it valid asyncapi.
-- [ ] Support consuming from multiple configurable exchanges
-- [ ] Use postgres as database
+- [x] Add info and server sections to spec to make it valid asyncapi.
+- [ ] Extract configuration to file.
+- [ ] Support consuming from multiple configurable exchanges.
+- [ ] Use postgres as database.
 - [ ] Add CI with github actions.
 - [ ] Build and publish docker image.
-- [ ] Adapt to asyncapi 2.0.
 
 ## Running locally
 
