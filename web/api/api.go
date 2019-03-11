@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -11,11 +12,20 @@ import (
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
 )
 
+func getServerSpec() spec.ServerSpec {
+	return spec.ServerSpec{
+		Name:    "Test server",
+		Version: "0.0.1",
+	}
+}
+
 func buildSpec(msgSpecs []spec.MessageSpec) builder.AsyncAPISpec {
 	b := builder.SpecBuilder{}
 	for _, msg := range msgSpecs {
 		b.AddMessage(msg)
 	}
+
+	b.AddServerInfo(getServerSpec())
 
 	return b.Build()
 }
@@ -33,9 +43,11 @@ func handleAsyncAPI(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Start the api server
 func Start() {
 	r := chi.NewRouter()
 	r.Get("/asyncapi", handleAsyncAPI)
 
+	log.Printf("Running api on localhost:5000")
 	http.ListenAndServe(":5000", r)
 }

@@ -14,3 +14,8 @@ type FieldSpec struct {
 	Name string `json:"name"`
 	Type string `json:"type"`
 }
+
+type ServerSpec struct {
+	Name    string
+	Version string
+}

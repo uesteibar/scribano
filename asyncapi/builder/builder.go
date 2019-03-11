@@ -33,7 +33,14 @@ type Topic struct {
 	Publish   Ref `json:"publish"`
 }
 
+type Info struct {
+	Title   string `json:"title"`
+	Version string `json:"version"`
+}
+
 type AsyncAPISpec struct {
+	AsyncAPI   string           `json:"asyncapi"`
+	Info       Info             `json:"info"`
 	Topics     map[string]Topic `json:"topics"`
 	Components Components       `json:"components"`
 }
@@ -81,6 +88,15 @@ func (b *SpecBuilder) AddMessage(msg spec.MessageSpec) *SpecBuilder {
 	b.Spec.Topics = make(map[string]Topic)
 	b.Spec.Topics[msg.Topic] = Topic{Subscribe: refFor(msg), Publish: refFor(msg)}
 	b.Spec.Components.Messages[msgName(msg)] = buildMsg(msg)
+	return b
+}
+
+const asyncApiVersion = "1.0.0"
+
+func (b *SpecBuilder) AddServerInfo(info spec.ServerSpec) *SpecBuilder {
+	b.Spec.Info = Info{Title: info.Name, Version: info.Version}
+	b.Spec.AsyncAPI = asyncApiVersion
+
 	return b
 }
 

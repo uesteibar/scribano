@@ -12,13 +12,18 @@ import (
 func TestSpecBuilder(t *testing.T) {
 	b := SpecBuilder{}
 
+	b.AddServerInfo(spec.ServerSpec{
+		Name:    "Test_title",
+		Version: "0.0.1",
+	})
+
 	msg1 := spec.MessageSpec{
 		Topic: "some.topic",
 		Payload: spec.PayloadSpec{
 			Type: "object",
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "float"},
+				spec.FieldSpec{Name: "age", Type: "number"},
 			},
 		},
 	}
@@ -27,6 +32,11 @@ func TestSpecBuilder(t *testing.T) {
 	res := b.Build()
 
 	expected := AsyncAPISpec{
+		AsyncAPI: "1.0.0",
+		Info: Info{
+			Title:   "Test_title",
+			Version: "0.0.1",
+		},
 		Topics: map[string]Topic{
 			"some.topic": Topic{
 				Subscribe: Ref{RefKey: "#/components/messages/SomeTopic"},
@@ -43,7 +53,7 @@ func TestSpecBuilder(t *testing.T) {
 								Type: "string",
 							},
 							"age": Property{
-								Type: "float",
+								Type: "number",
 							},
 						},
 					},
@@ -57,6 +67,11 @@ func TestSpecBuilder(t *testing.T) {
 	json, _ := json.Marshal(res)
 
 	expectedJson := `{
+		"asyncapi": "1.0.0",
+		"info": {
+			"title": "Test_title",
+			"version": "0.0.1"
+		},
 		"topics": {
 			"some.topic": {
 				"subscribe": {
@@ -74,7 +89,7 @@ func TestSpecBuilder(t *testing.T) {
 						"type":"object",
 						"properties": {
 							"age": {
-								"type":"float"
+								"type":"number"
 							},
 							"name": {
 								"type":"string"

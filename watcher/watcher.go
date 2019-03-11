@@ -10,6 +10,7 @@ import (
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
 )
 
+// Watch the amqp server for incoming messages and store the spec
 func Watch() {
 	chConsumed := make(chan consumer.Message)
 	c := consumer.Consumer{
