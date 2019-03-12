@@ -15,6 +15,7 @@ func failOnError(err error, msg string) {
 type Consumer struct {
 	Host       string
 	RoutingKey string
+	Exchange   string
 	Ch         chan Message
 }
 
@@ -42,13 +43,13 @@ func (c *Consumer) Consume() {
 	defer ch.Close()
 
 	err = ch.ExchangeDeclare(
-		"/",     // name
-		"topic", // type
-		true,    // durable
-		false,   // auto-deleted
-		false,   // internal
-		false,   // no-wait
-		nil,     // arguments
+		c.Exchange, // name
+		"topic",    // type
+		true,       // durable
+		false,      // auto-deleted
+		false,      // internal
+		false,      // no-wait
+		nil,        // arguments
 	)
 	failOnError(err, "Failed to declare an exchange")
 
@@ -65,7 +66,7 @@ func (c *Consumer) Consume() {
 	err = ch.QueueBind(
 		q.Name,       // queue name
 		c.RoutingKey, // routing key
-		"/",          // exchange
+		c.Exchange,   // exchange
 		false,
 		nil)
 	failOnError(err, "Failed to bind a queue")

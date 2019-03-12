@@ -13,15 +13,16 @@ import (
 )
 
 const AMQPHost = "amqp://guest:guest@localhost"
+const Exchange = "/"
 
 func produce(topic, body string) {
 	conn, _ := amqp.Dial(AMQPHost)
 	defer conn.Close()
 	ch, _ := conn.Channel()
 	defer ch.Close()
-	_ = ch.ExchangeDeclare("/", "topic", true, false, false, false, nil)
+	_ = ch.ExchangeDeclare(Exchange, "topic", true, false, false, false, nil)
 	p := amqp.Publishing{ContentType: "application/json", Body: []byte(body)}
-	_ = ch.Publish("/", topic, false, false, p)
+	_ = ch.Publish(Exchange, topic, false, false, p)
 }
 
 func TestEndToEnd(t *testing.T) {
@@ -38,7 +39,8 @@ func TestEndToEnd(t *testing.T) {
 	topic = "key.test"
 	produce(topic, body)
 
-	go Watch()
+	watcher := New(Config{Host: AMQPHost, RoutingKey: "#", Exchange: Exchange})
+	go watcher.Watch()
 
 	time.Sleep(time.Duration(100000) * 1000)
 

@@ -81,13 +81,16 @@ func refFor(msg spec.MessageSpec) Ref {
 }
 
 func (b *SpecBuilder) AddMessage(msg spec.MessageSpec) *SpecBuilder {
+	if b.Spec.Topics == nil {
+		b.Spec.Topics = make(map[string]Topic)
+	}
+	b.Spec.Topics[msg.Topic] = Topic{Subscribe: refFor(msg), Publish: refFor(msg)}
+
 	if b.Spec.Components.Messages == nil {
 		b.Spec.Components.Messages = make(map[string]Message)
 	}
-
-	b.Spec.Topics = make(map[string]Topic)
-	b.Spec.Topics[msg.Topic] = Topic{Subscribe: refFor(msg), Publish: refFor(msg)}
 	b.Spec.Components.Messages[msgName(msg)] = buildMsg(msg)
+
 	return b
 }
 

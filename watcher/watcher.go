@@ -10,12 +10,27 @@ import (
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
 )
 
+type Config struct {
+	Host       string
+	RoutingKey string
+	Exchange   string
+}
+
+type Watcher struct {
+	Config Config
+}
+
+func New(c Config) Watcher {
+	return Watcher{Config: c}
+}
+
 // Watch the amqp server for incoming messages and store the spec
-func Watch() {
+func (w Watcher) Watch() {
 	chConsumed := make(chan consumer.Message)
 	c := consumer.Consumer{
-		Host:       "amqp://guest:guest@localhost",
-		RoutingKey: "#",
+		Host:       w.Config.Host,
+		RoutingKey: w.Config.RoutingKey,
+		Exchange:   w.Config.Exchange,
 		Ch:         chConsumed,
 	}
 

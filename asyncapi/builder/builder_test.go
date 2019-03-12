@@ -29,6 +29,17 @@ func TestSpecBuilder(t *testing.T) {
 	}
 	b.AddMessage(msg1)
 
+	msg2 := spec.MessageSpec{
+		Topic: "other.topic",
+		Payload: spec.PayloadSpec{
+			Type: "object",
+			Fields: []spec.FieldSpec{
+				spec.FieldSpec{Name: "uuid", Type: "string"},
+			},
+		},
+	}
+	b.AddMessage(msg2)
+
 	res := b.Build()
 
 	expected := AsyncAPISpec{
@@ -42,6 +53,10 @@ func TestSpecBuilder(t *testing.T) {
 				Subscribe: Ref{RefKey: "#/components/messages/SomeTopic"},
 				Publish:   Ref{RefKey: "#/components/messages/SomeTopic"},
 			},
+			"other.topic": Topic{
+				Subscribe: Ref{RefKey: "#/components/messages/OtherTopic"},
+				Publish:   Ref{RefKey: "#/components/messages/OtherTopic"},
+			},
 		},
 		Components: Components{
 			Messages: map[string]Message{
@@ -49,12 +64,16 @@ func TestSpecBuilder(t *testing.T) {
 					Payload: Payload{
 						Type: "object",
 						Properties: map[string]Property{
-							"name": Property{
-								Type: "string",
-							},
-							"age": Property{
-								Type: "number",
-							},
+							"name": Property{Type: "string"},
+							"age":  Property{Type: "number"},
+						},
+					},
+				},
+				"OtherTopic": Message{
+					Payload: Payload{
+						Type: "object",
+						Properties: map[string]Property{
+							"uuid": Property{Type: "string"},
 						},
 					},
 				},
@@ -73,6 +92,14 @@ func TestSpecBuilder(t *testing.T) {
 			"version": "0.0.1"
 		},
 		"topics": {
+			"other.topic": {
+				"subscribe": {
+				  "$ref": "#/components/messages/OtherTopic"
+				},
+				"publish": {
+				  "$ref": "#/components/messages/OtherTopic"
+				}
+			},
 			"some.topic": {
 				"subscribe": {
 				  "$ref": "#/components/messages/SomeTopic"
@@ -84,6 +111,16 @@ func TestSpecBuilder(t *testing.T) {
 		},
 		"components": {
 			"messages": {
+				"OtherTopic": {
+					"payload": {
+						"type":"object",
+						"properties": {
+							"uuid": {
+								"type":"string"
+							}
+						}
+					}
+				},
 				"SomeTopic": {
 					"payload": {
 						"type":"object",

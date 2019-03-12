@@ -7,11 +7,20 @@ import (
 	"github.com/uesteibar/asyncapi-watcher/web/api"
 )
 
+const amqpHost = "amqp://guest:guest@localhost"
+const exchange = "/"
+
 func main() {
 	repo := messages_repo.New(db.DB{})
 	repo.Migrate()
 
-	go watcher.Watch()
+	w := watcher.New(watcher.Config{
+		Host:       amqpHost,
+		RoutingKey: "#",
+		Exchange:   exchange,
+	})
+
+	go w.Watch()
 
 	api.Start()
 }
