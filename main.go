@@ -1,26 +1,37 @@
 package main
 
 import (
+	"flag"
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/repos/messages_repo"
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
 	"github.com/uesteibar/asyncapi-watcher/watcher"
+	yamlconfig "github.com/uesteibar/asyncapi-watcher/watcher/config/parsers/yaml_config"
 	"github.com/uesteibar/asyncapi-watcher/web/api"
 )
 
-const amqpHost = "amqp://guest:guest@localhost"
-const exchange = "/"
+const configFile = "./fixtures/test/yaml_config.yml"
+
+func configFilePath() string {
+	var path string
+	flag.StringVar(&path, "f", "", "path to the config file.")
+	flag.Parse()
+
+	return path
+}
 
 func main() {
 	repo := messages_repo.New(db.DB{})
 	repo.Migrate()
 
-	w := watcher.New(watcher.Config{
-		Host:       amqpHost,
-		RoutingKey: "#",
-		Exchange:   exchange,
-	})
+	configLoader := yamlconfig.New(configFilePath())
 
-	go w.Watch()
+	if config, err := configLoader.Parse(); err == nil {
+		w := watcher.New(config)
 
-	api.Start()
+		go w.Watch()
+
+		api.Start()
+	} else {
+		panic(err)
+	}
 }

@@ -9,7 +9,7 @@ compliant documenation served at `/asyncapi`.
 ## Roadmap
 
 - [x] Add info and server sections to spec to make it valid asyncapi.
-- [ ] Extract configuration to file.
+- [x] Extract configuration to file.
 - [ ] Support consuming from multiple configurable exchanges.
 - [ ] Use postgres as database.
 - [ ] Add CI with github actions.
@@ -20,6 +20,10 @@ compliant documenation served at `/asyncapi`.
 Install dependencies
 ```
 go mod download
+```
+
+```
+go run main.go -f fixtures/test/yaml_config.yml
 ```
 
 ### Running tests

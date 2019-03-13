@@ -1,0 +1,2 @@
+host: "amqp://guest:guest@localhost"
+routing_key: "#"
