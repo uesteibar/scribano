@@ -12,10 +12,17 @@ func TestParse(t *testing.T) {
 	config, err := parser.Parse()
 
 	assert.Nil(t, err)
-	expected := watcher.Config{
-		Host:       "amqp://guest:guest@localhost",
-		Exchange:   "/",
-		RoutingKey: "#",
+	expected := []watcher.Config{
+		watcher.Config{
+			Host:       "amqp://guest:guest@localhost",
+			Exchange:   "/",
+			RoutingKey: "#",
+		},
+		watcher.Config{
+			Host:       "amqp://guest:guest@localhost",
+			Exchange:   "/other-exchange",
+			RoutingKey: "key.*",
+		},
 	}
 	assert.Equal(t, expected, config)
 }

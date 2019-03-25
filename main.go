@@ -2,14 +2,13 @@ package main
 
 import (
 	"flag"
+
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/repos/messages_repo"
 	"github.com/uesteibar/asyncapi-watcher/storage/db"
 	"github.com/uesteibar/asyncapi-watcher/watcher"
 	yamlconfig "github.com/uesteibar/asyncapi-watcher/watcher/config/parsers/yaml_config"
 	"github.com/uesteibar/asyncapi-watcher/web/api"
 )
-
-const configFile = "./fixtures/test/yaml_config.yml"
 
 func configFilePath() string {
 	var path string
@@ -25,13 +24,16 @@ func main() {
 
 	configLoader := yamlconfig.New(configFilePath())
 
-	if config, err := configLoader.Parse(); err == nil {
-		w := watcher.New(config)
+	configs, err := configLoader.Parse()
 
-		go w.Watch()
-
-		api.Start()
-	} else {
+	if err != nil {
 		panic(err)
 	}
+
+	for _, c := range configs {
+		w := watcher.New(c)
+		go w.Watch()
+
+	}
+	api.Start()
 }

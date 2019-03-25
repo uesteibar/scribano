@@ -23,6 +23,16 @@ func validConfig(c config) bool {
 	return c.Host != "" && c.Exchange != "" && c.RoutingKey != ""
 }
 
+func validConfigs(configs []config) bool {
+	for _, c := range configs {
+		if !validConfig(c) {
+			return false
+		}
+	}
+
+	return true
+}
+
 func invalidConfigErr() error {
 	return errors.New("Invalid config")
 }
@@ -33,24 +43,33 @@ func New(path string) YamlConfig {
 }
 
 // Parse yaml file into watcher configuration
-func (c YamlConfig) Parse() (watcher.Config, error) {
-	config := config{}
+func (c YamlConfig) Parse() ([]watcher.Config, error) {
+	configs := []watcher.Config{}
+	parsedConfigs := []config{}
+
 	data, err := ioutil.ReadFile(c.Path)
-	if err == nil {
-		err = yaml.Unmarshal(data, &config)
+	if err != nil {
+		return configs, err
+	}
+	err = yaml.Unmarshal(data, &parsedConfigs)
 
-		if err == nil {
-			if validConfig(config) {
-				return watcher.Config{
-					Host:       config.Host,
-					Exchange:   config.Exchange,
-					RoutingKey: config.RoutingKey,
-				}, nil
-			}
-
-			err = invalidConfigErr()
-		}
+	if err != nil {
+		return configs, err
 	}
 
-	return watcher.Config{}, err
+	if !validConfigs(parsedConfigs) {
+		return configs, invalidConfigErr()
+	}
+
+	for _, parsedConfig := range parsedConfigs {
+		configs = append(
+			configs,
+			watcher.Config{
+				Host:       parsedConfig.Host,
+				Exchange:   parsedConfig.Exchange,
+				RoutingKey: parsedConfig.RoutingKey,
+			})
+	}
+
+	return configs, nil
 }

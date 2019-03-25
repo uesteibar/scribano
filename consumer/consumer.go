@@ -90,7 +90,7 @@ func (c *Consumer) Consume() {
 		}
 	}()
 
-	log.Printf(" [*] Waiting for messages.")
+	log.Printf(" [*] Waiting for messages - broker: %s, exchange: %s, matcher: %s.", c.Host, c.Exchange, c.RoutingKey)
 
 	<-forever
 }

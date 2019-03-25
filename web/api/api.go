@@ -48,6 +48,6 @@ func Start() {
 	r := chi.NewRouter()
 	r.Get("/asyncapi", handleAsyncAPI)
 
-	log.Printf("Running api on localhost:5000")
+	log.Printf("Running api on http://localhost:5000")
 	http.ListenAndServe(":5000", r)
 }
