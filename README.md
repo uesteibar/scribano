@@ -11,6 +11,7 @@ compliant documenation served at `/asyncapi`.
 - [x] Add info and server sections to spec to make it valid asyncapi.
 - [x] Extract configuration to file.
 - [x] Support consuming from multiple configurable exchanges.
+- [ ] Allow loading configuration from url instead of local file.
 - [ ] Use postgres as database.
 - [ ] Add CI with github actions.
 - [ ] Build and publish docker image.
