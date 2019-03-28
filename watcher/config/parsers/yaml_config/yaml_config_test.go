@@ -7,9 +7,26 @@ import (
 	"github.com/uesteibar/asyncapi-watcher/watcher"
 )
 
+type mockLoader struct {
+	Source []byte
+}
+
+func (l *mockLoader) Load() ([]byte, error) {
+	return l.Source, nil
+}
+
 func TestParse(t *testing.T) {
-	parser := New("../../../../fixtures/test/yaml_config.yml")
-	config, err := parser.Parse()
+	loader := &mockLoader{
+		Source: []byte(`---
+- host: "amqp://guest:guest@localhost"
+  exchange: "/"
+  routing_key: "#"
+- host: "amqp://guest:guest@localhost"
+  exchange: "/other-exchange"
+  routing_key: "key.*"`),
+	}
+	parser := New(loader)
+	configs, err := parser.Parse()
 
 	assert.Nil(t, err)
 	expected := []watcher.Config{
@@ -24,18 +41,16 @@ func TestParse(t *testing.T) {
 			RoutingKey: "key.*",
 		},
 	}
-	assert.Equal(t, expected, config)
+	assert.Equal(t, expected, configs)
 }
 
-func TestParse_NoFile(t *testing.T) {
-	parser := New("non_existing_file")
-	_, err := parser.Parse()
-
-	assert.NotNil(t, err)
-}
-
-func TestParse_InvalidFile(t *testing.T) {
-	parser := New("../../../../fixtures/test/invalid_yaml_config.yml")
+func TestParse_InvalidConfig(t *testing.T) {
+	loader := &mockLoader{
+		Source: []byte(`---
+- host: "amqp://guest:guest@localhost"
+  routing_key: "#"`),
+	}
+	parser := New(loader)
 	_, err := parser.Parse()
 
 	assert.NotNil(t, err)

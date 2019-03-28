@@ -11,7 +11,7 @@ compliant documenation served at `/asyncapi`.
 - [x] Add info and server sections to spec to make it valid asyncapi.
 - [x] Extract configuration to file.
 - [x] Support consuming from multiple configurable exchanges.
-- [ ] Allow loading configuration from url instead of local file.
+- [x] Allow loading configuration from url instead of local file.
 - [ ] Use postgres as database.
 - [ ] Add CI with github actions.
 - [ ] Build and publish docker image.
@@ -25,6 +25,11 @@ go mod download
 
 ```
 go run main.go -f fixtures/test/yaml_config.yml
+```
+
+You can also load the configuration from a url
+```
+go run main.go -u https://raw.githubusercontent.com/uesteibar/asyncapi-watcher/master/fixtures/test/yaml_config.yml
 ```
 
 ### Running tests

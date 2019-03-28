@@ -2,28 +2,28 @@ package yamlconfig
 
 import (
 	"errors"
-	"io/ioutil"
 
 	"github.com/uesteibar/asyncapi-watcher/watcher"
+	"github.com/uesteibar/asyncapi-watcher/watcher/config"
 	"gopkg.in/yaml.v2"
 )
 
 // YamlConfig loads watcher configuration from yaml file
 type YamlConfig struct {
-	Path string
+	Loader config.Loader
 }
 
-type config struct {
+type parsedConfig struct {
 	Host       string `yaml:"host"`
 	Exchange   string `yaml:"exchange"`
 	RoutingKey string `yaml:"routing_key"`
 }
 
-func validConfig(c config) bool {
+func validConfig(c parsedConfig) bool {
 	return c.Host != "" && c.Exchange != "" && c.RoutingKey != ""
 }
 
-func validConfigs(configs []config) bool {
+func validConfigs(configs []parsedConfig) bool {
 	for _, c := range configs {
 		if !validConfig(c) {
 			return false
@@ -38,16 +38,16 @@ func invalidConfigErr() error {
 }
 
 // New returns a new YamlConfig instance
-func New(path string) YamlConfig {
-	return YamlConfig{Path: path}
+func New(loader config.Loader) YamlConfig {
+	return YamlConfig{Loader: loader}
 }
 
 // Parse yaml file into watcher configuration
 func (c YamlConfig) Parse() ([]watcher.Config, error) {
 	configs := []watcher.Config{}
-	parsedConfigs := []config{}
+	parsedConfigs := []parsedConfig{}
 
-	data, err := ioutil.ReadFile(c.Path)
+	data, err := c.Loader.Load()
 	if err != nil {
 		return configs, err
 	}
