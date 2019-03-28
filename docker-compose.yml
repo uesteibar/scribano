@@ -1,6 +1,24 @@
 ---
 version: '3'
 services:
+  pg:
+    image: postgres
+    volumes:
+      - 'pg:/var/lib/postgresql/data'
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=asyncapi_dev
+
+  pg_test:
+    image: postgres
+    volumes:
+      - 'pg:/var/lib/postgresql/test_data'
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=asyncapi_test
+
   rabbit:
      hostname: rabbit
      image: rabbitmq
@@ -10,3 +28,6 @@ services:
      ports:
        - "5672:5672"
        - "15672:15672"
+
+volumes:
+  pg:

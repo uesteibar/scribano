@@ -45,5 +45,6 @@ func main() {
 		go w.Watch()
 
 	}
+
 	api.Start()
 }

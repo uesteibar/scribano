@@ -12,7 +12,7 @@ compliant documenation served at `/asyncapi`.
 - [x] Extract configuration to file.
 - [x] Support consuming from multiple configurable exchanges.
 - [x] Allow loading configuration from url instead of local file.
-- [ ] Use postgres as database.
+- [x] Use postgres as database.
 - [ ] Add CI with github actions.
 - [ ] Build and publish docker image.
 
@@ -23,11 +23,16 @@ Install dependencies
 go mod download
 ```
 
+Load environmental variables
+```
+source .env.dev
+```
+
 ```
 go run main.go -f fixtures/test/yaml_config.yml
 ```
 
-You can also load the configuration from a url
+You can also fetch the configuration from a url
 ```
 go run main.go -u https://raw.githubusercontent.com/uesteibar/asyncapi-watcher/master/fixtures/test/yaml_config.yml
 ```
@@ -40,8 +45,8 @@ Start the rabbitmq server
 docker-compose up -d
 ```
 
-Run the tests recursively for all subpackages
+Run the tests
 
 ```
-go test ./...
+make test
 ```
