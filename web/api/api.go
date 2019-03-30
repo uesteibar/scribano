@@ -14,8 +14,8 @@ import (
 
 func getServerSpec() spec.ServerSpec {
 	return spec.ServerSpec{
-		Name:    "Test server",
-		Version: "0.0.1",
+		Name:    "",
+		Version: "",
 	}
 }
 
