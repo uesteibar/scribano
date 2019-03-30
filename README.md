@@ -13,6 +13,7 @@ compliant documenation served at `/asyncapi`.
 - [x] Support consuming from multiple configurable exchanges.
 - [x] Allow loading configuration from url instead of local file.
 - [x] Use postgres as database.
+- [ ] Add exchange information to each topic via x-exchange attribute.
 - [ ] Add CI.
 - [ ] Build and publish docker image on push to master.
 

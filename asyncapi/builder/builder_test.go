@@ -12,10 +12,7 @@ import (
 func TestSpecBuilder(t *testing.T) {
 	b := SpecBuilder{}
 
-	b.AddServerInfo(spec.ServerSpec{
-		Name:    "Test_title",
-		Version: "0.0.1",
-	})
+	b.AddServerInfo(spec.ServerSpec{})
 
 	msg1 := spec.MessageSpec{
 		Topic: "some.topic",
@@ -45,17 +42,15 @@ func TestSpecBuilder(t *testing.T) {
 	expected := AsyncAPISpec{
 		AsyncAPI: "1.0.0",
 		Info: Info{
-			Title:   "Test_title",
-			Version: "0.0.1",
+			Title:   "",
+			Version: "",
 		},
 		Topics: map[string]Topic{
 			"some.topic": Topic{
-				Subscribe: Ref{RefKey: "#/components/messages/SomeTopic"},
-				Publish:   Ref{RefKey: "#/components/messages/SomeTopic"},
+				Publish: Ref{RefKey: "#/components/messages/SomeTopic"},
 			},
 			"other.topic": Topic{
-				Subscribe: Ref{RefKey: "#/components/messages/OtherTopic"},
-				Publish:   Ref{RefKey: "#/components/messages/OtherTopic"},
+				Publish: Ref{RefKey: "#/components/messages/OtherTopic"},
 			},
 		},
 		Components: Components{
@@ -85,25 +80,19 @@ func TestSpecBuilder(t *testing.T) {
 
 	json, _ := json.Marshal(res)
 
-	expectedJson := `{
+	expectedJSON := `{
 		"asyncapi": "1.0.0",
 		"info": {
-			"title": "Test_title",
-			"version": "0.0.1"
+			"title": "",
+			"version": ""
 		},
 		"topics": {
 			"other.topic": {
-				"subscribe": {
-				  "$ref": "#/components/messages/OtherTopic"
-				},
 				"publish": {
 				  "$ref": "#/components/messages/OtherTopic"
 				}
 			},
 			"some.topic": {
-				"subscribe": {
-				  "$ref": "#/components/messages/SomeTopic"
-				},
 				"publish": {
 				  "$ref": "#/components/messages/SomeTopic"
 				}
@@ -138,9 +127,9 @@ func TestSpecBuilder(t *testing.T) {
 		}
 	}`
 
-	expectedJson = strings.Replace(expectedJson, "\n", "", -1)
-	expectedJson = strings.Replace(expectedJson, "\t", "", -1)
-	expectedJson = strings.Replace(expectedJson, " ", "", -1)
+	expectedJSON = strings.Replace(expectedJSON, "\n", "", -1)
+	expectedJSON = strings.Replace(expectedJSON, "\t", "", -1)
+	expectedJSON = strings.Replace(expectedJSON, " ", "", -1)
 
-	assert.Equal(t, expectedJson, string(json))
+	assert.Equal(t, expectedJSON, string(json))
 }

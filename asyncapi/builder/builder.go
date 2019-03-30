@@ -29,8 +29,7 @@ type Ref struct {
 }
 
 type Topic struct {
-	Subscribe Ref `json:"subscribe"`
-	Publish   Ref `json:"publish"`
+	Publish Ref `json:"publish"`
 }
 
 type Info struct {
@@ -84,7 +83,7 @@ func (b *SpecBuilder) AddMessage(msg spec.MessageSpec) *SpecBuilder {
 	if b.Spec.Topics == nil {
 		b.Spec.Topics = make(map[string]Topic)
 	}
-	b.Spec.Topics[msg.Topic] = Topic{Subscribe: refFor(msg), Publish: refFor(msg)}
+	b.Spec.Topics[msg.Topic] = Topic{Publish: refFor(msg)}
 
 	if b.Spec.Components.Messages == nil {
 		b.Spec.Components.Messages = make(map[string]Message)

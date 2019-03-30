@@ -13,10 +13,7 @@ import (
 )
 
 func getServerSpec() spec.ServerSpec {
-	return spec.ServerSpec{
-		Name:    "",
-		Version: "",
-	}
+	return spec.ServerSpec{}
 }
 
 func buildSpec(msgSpecs []spec.MessageSpec) builder.AsyncAPISpec {
