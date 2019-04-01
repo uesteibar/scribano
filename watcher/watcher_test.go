@@ -50,7 +50,7 @@ func TestEndToEnd(t *testing.T) {
 			Type: "object",
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "number"},
+				spec.FieldSpec{Name: "age", Type: "integer"},
 				spec.FieldSpec{Name: "canDrive", Type: "boolean"},
 			},
 		},

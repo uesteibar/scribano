@@ -20,6 +20,7 @@ func TestAnalyze_JSON(t *testing.T) {
 		{
 			"name": "infer type",
 			"age": 27,
+			"grade": 9.5,
 			"canDrive": false
 		}
 	`
@@ -41,6 +42,10 @@ func TestAnalyze_JSON(t *testing.T) {
 					},
 					spec.FieldSpec{
 						Name: "age",
+						Type: "integer",
+					},
+					spec.FieldSpec{
+						Name: "grade",
 						Type: "number",
 					},
 					spec.FieldSpec{

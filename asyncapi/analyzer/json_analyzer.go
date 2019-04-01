@@ -6,11 +6,16 @@ import (
 	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
 )
 
-type JsonAnalyzer struct{}
+// JSONAnalyzer analyzes json payloads to build a spec
+type JSONAnalyzer struct{}
 
-const PayloadType = "object"
+const (
+	payloadType = "object"
+	unknownType = "unknown"
+)
 
-func (a JsonAnalyzer) GetPayloadSpec(payload []byte) spec.PayloadSpec {
+// GetPayloadSpec analyzes a payload and returns the spec
+func (a JSONAnalyzer) GetPayloadSpec(payload []byte) spec.PayloadSpec {
 	var parsed map[string]interface{}
 	json.Unmarshal([]byte(payload), &parsed)
 
@@ -19,18 +24,30 @@ func (a JsonAnalyzer) GetPayloadSpec(payload []byte) spec.PayloadSpec {
 		fields = append(fields, spec.FieldSpec{Name: k, Type: typeof(v)})
 	}
 
-	return spec.PayloadSpec{Fields: fields, Type: PayloadType}
+	return spec.PayloadSpec{Fields: fields, Type: payloadType}
+}
+
+func isRound(n float64) bool {
+	return n == float64(int64(n))
+}
+
+func inferNumberType(n interface{}) string {
+	if isRound(n.(float64)) {
+		return "integer"
+	}
+
+	return "number"
 }
 
 func typeof(v interface{}) string {
 	switch v.(type) {
 	case float64:
-		return "number"
+		return inferNumberType(v)
 	case string:
 		return "string"
 	case bool:
 		return "boolean"
 	default:
-		return "unknown"
+		return unknownType
 	}
 }
