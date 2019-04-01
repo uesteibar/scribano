@@ -19,12 +19,18 @@ func (a JSONAnalyzer) GetPayloadSpec(payload []byte) spec.PayloadSpec {
 	var parsed map[string]interface{}
 	json.Unmarshal([]byte(payload), &parsed)
 
-	var fields []spec.FieldSpec
-	for k, v := range parsed {
-		fields = append(fields, spec.FieldSpec{Name: k, Type: typeof(v)})
-	}
+	fields := fieldsFor(parsed)
 
 	return spec.PayloadSpec{Fields: fields, Type: payloadType}
+}
+
+func fieldsFor(raw map[string]interface{}) []spec.FieldSpec {
+	var fields []spec.FieldSpec
+	for k, v := range raw {
+		fields = append(fields, fieldFor(k, v))
+	}
+
+	return fields
 }
 
 func isRound(n float64) bool {
@@ -39,15 +45,15 @@ func inferNumberType(n interface{}) string {
 	return "number"
 }
 
-func typeof(v interface{}) string {
+func fieldFor(k string, v interface{}) spec.FieldSpec {
 	switch v.(type) {
 	case float64:
-		return inferNumberType(v)
+		return spec.FieldSpec{Name: k, Type: inferNumberType(v)}
 	case string:
-		return "string"
+		return spec.FieldSpec{Name: k, Type: "string"}
 	case bool:
-		return "boolean"
+		return spec.FieldSpec{Name: k, Type: "boolean"}
 	default:
-		return unknownType
+		return spec.FieldSpec{Name: k, Type: "object", Fields: fieldsFor(v.(map[string]interface{}))}
 	}
 }

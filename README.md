@@ -6,17 +6,6 @@ communicating through [rabbitmq](https://www.rabbitmq.com/).
 It listens to all published amqp messages and keeps an updated asyncapi
 compliant documenation served at `/asyncapi`.
 
-## Roadmap
-
-- [x] Add info and server sections to spec to make it valid asyncapi.
-- [x] Extract configuration to file.
-- [x] Support consuming from multiple configurable exchanges.
-- [x] Allow loading configuration from url instead of local file.
-- [x] Use postgres as database.
-- [ ] Add exchange information to each topic via x-exchange attribute.
-- [ ] Add CI.
-- [ ] Build and publish docker image on push to master.
-
 ## Running locally
 
 Install dependencies

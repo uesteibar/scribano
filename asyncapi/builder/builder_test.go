@@ -22,6 +22,13 @@ func TestSpecBuilder(t *testing.T) {
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
 				spec.FieldSpec{Name: "age", Type: "number"},
+				spec.FieldSpec{
+					Name: "car",
+					Type: "object",
+					Fields: []spec.FieldSpec{
+						spec.FieldSpec{Name: "brand", Type: "string"},
+					},
+				},
 			},
 		},
 	}
@@ -65,6 +72,12 @@ func TestSpecBuilder(t *testing.T) {
 						Properties: map[string]Property{
 							"name": Property{Type: "string"},
 							"age":  Property{Type: "number"},
+							"car": Property{
+								Type: "object",
+								Properties: map[string]Property{
+									"brand": Property{Type: "string"},
+								},
+							},
 						},
 					},
 				},
@@ -122,6 +135,14 @@ func TestSpecBuilder(t *testing.T) {
 						"properties": {
 							"age": {
 								"type":"number"
+							},
+							"car": {
+								"type":"object",
+								"properties": {
+									"brand": {
+										"type":"string"
+									}
+								}
 							},
 							"name": {
 								"type":"string"

@@ -30,6 +30,13 @@ func TestPersist(t *testing.T) {
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
 				spec.FieldSpec{Name: "age", Type: "number"},
+				spec.FieldSpec{
+					Name: "car",
+					Type: "object",
+					Fields: []spec.FieldSpec{
+						spec.FieldSpec{Name: "brand", Type: "string"},
+					},
+				},
 			},
 		},
 	}
@@ -52,6 +59,13 @@ func TestPersist(t *testing.T) {
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
 				spec.FieldSpec{Name: "age", Type: "string"},
+				spec.FieldSpec{
+					Name: "car",
+					Type: "object",
+					Fields: []spec.FieldSpec{
+						spec.FieldSpec{Name: "brand", Type: "string"},
+					},
+				},
 			},
 		},
 	}

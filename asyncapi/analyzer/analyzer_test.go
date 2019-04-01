@@ -21,7 +21,11 @@ func TestAnalyze_JSON(t *testing.T) {
 			"name": "infer type",
 			"age": 27,
 			"grade": 9.5,
-			"canDrive": false
+			"canDrive": false,
+			"car": {
+				"brand": "mercedes",
+				"seats": 5
+			}
 		}
 	`
 	chIn <- consumer.Message{
@@ -53,6 +57,20 @@ func TestAnalyze_JSON(t *testing.T) {
 					spec.FieldSpec{
 						Name: "canDrive",
 						Type: "boolean",
+					},
+					spec.FieldSpec{
+						Name: "car",
+						Type: "object",
+						Fields: []spec.FieldSpec{
+							spec.FieldSpec{
+								Name: "brand",
+								Type: "string",
+							},
+							spec.FieldSpec{
+								Name: "seats",
+								Type: "integer",
+							},
+						},
 					},
 				},
 			},

@@ -1,6 +1,7 @@
 package messages_repo
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/google/uuid"
@@ -21,6 +22,13 @@ func TestRepo(t *testing.T) {
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
 				spec.FieldSpec{Name: "age", Type: "float"},
+				spec.FieldSpec{
+					Name: "car",
+					Type: "object",
+					Fields: []spec.FieldSpec{
+						spec.FieldSpec{Name: "brand", Type: "string"},
+					},
+				},
 			},
 		},
 	}
@@ -33,6 +41,7 @@ func TestRepo(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, topic, m.Topic)
 	assert.Equal(t, msg.Payload, m.Payload)
+	fmt.Printf("%+v", m.Payload)
 
 	notFoundMsg, err := repo.Find("wrong.topic")
 	assert.Equal(t, "", notFoundMsg.Topic)

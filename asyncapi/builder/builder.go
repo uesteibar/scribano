@@ -8,7 +8,8 @@ import (
 )
 
 type Property struct {
-	Type string `json:"type"`
+	Type       string              `json:"type"`
+	Properties map[string]Property `json:"properties,omitempty"`
 }
 
 type Payload struct {
@@ -49,18 +50,25 @@ type SpecBuilder struct {
 	Spec AsyncAPISpec
 }
 
-func buildMsg(msg spec.MessageSpec) Message {
-	m := Message{
-		Payload: Payload{
-			Type: msg.Payload.Type,
-		},
-	}
-	m.Payload.Properties = make(map[string]Property)
-	for _, f := range msg.Payload.Fields {
-		m.Payload.Properties[f.Name] = Property{
-			Type: f.Type,
+func buildProperties(fields []spec.FieldSpec) map[string]Property {
+	properties := make(map[string]Property)
+
+	for _, f := range fields {
+		p := Property{Type: f.Type}
+		if f.Type == "object" {
+			p.Properties = buildProperties(f.Fields)
 		}
+
+		properties[f.Name] = p
 	}
+
+	return properties
+}
+
+func buildMsg(msg spec.MessageSpec) Message {
+	m := Message{Payload: Payload{Type: msg.Payload.Type}}
+
+	m.Payload.Properties = buildProperties(msg.Payload.Fields)
 
 	return m
 }

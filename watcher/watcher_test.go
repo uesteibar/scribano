@@ -32,7 +32,10 @@ func TestEndToEnd(t *testing.T) {
 		{
 			"name": "infer type",
 			"age": 27,
-			"canDrive": false
+			"canDrive": false,
+			"car": {
+				"brand": "ford"
+			}
 		}
 	`
 	topic := uuid.New().String()
@@ -53,6 +56,13 @@ func TestEndToEnd(t *testing.T) {
 				spec.FieldSpec{Name: "name", Type: "string"},
 				spec.FieldSpec{Name: "age", Type: "integer"},
 				spec.FieldSpec{Name: "canDrive", Type: "boolean"},
+				spec.FieldSpec{
+					Name: "car",
+					Type: "object",
+					Fields: []spec.FieldSpec{
+						spec.FieldSpec{Name: "brand", Type: "string"},
+					},
+				},
 			},
 		},
 	}
