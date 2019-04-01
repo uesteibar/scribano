@@ -5,8 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
-	"github.com/uesteibar/asyncapi-watcher/storage/db"
+	"github.com/uesteibar/scribano/asyncapi/spec"
+	"github.com/uesteibar/scribano/storage/db"
 )
 
 func TestRepo(t *testing.T) {

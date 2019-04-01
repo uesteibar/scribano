@@ -4,9 +4,9 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/repos/messages_repo"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
-	"github.com/uesteibar/asyncapi-watcher/storage/db"
+	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/spec"
+	"github.com/uesteibar/scribano/storage/db"
 )
 
 type Persister struct {

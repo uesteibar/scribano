@@ -3,11 +3,11 @@ package watcher
 import (
 	"log"
 
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/analyzer"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/persister"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
-	"github.com/uesteibar/asyncapi-watcher/consumer"
-	"github.com/uesteibar/asyncapi-watcher/storage/db"
+	"github.com/uesteibar/scribano/asyncapi/analyzer"
+	"github.com/uesteibar/scribano/asyncapi/persister"
+	"github.com/uesteibar/scribano/asyncapi/spec"
+	"github.com/uesteibar/scribano/consumer"
+	"github.com/uesteibar/scribano/storage/db"
 )
 
 type Config struct {

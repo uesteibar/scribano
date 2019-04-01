@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
-	"github.com/uesteibar/asyncapi-watcher/storage/db"
+	"github.com/uesteibar/scribano/asyncapi/spec"
+	"github.com/uesteibar/scribano/storage/db"
 )
 
 const gormNotFound = "record not found"

@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
-	"github.com/uesteibar/asyncapi-watcher/consumer"
+	"github.com/uesteibar/scribano/asyncapi/spec"
+	"github.com/uesteibar/scribano/consumer"
 )
 
 func TestAnalyze_JSON(t *testing.T) {

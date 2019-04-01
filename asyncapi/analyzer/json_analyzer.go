@@ -3,7 +3,7 @@ package analyzer
 import (
 	"encoding/json"
 
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
+	"github.com/uesteibar/scribano/asyncapi/spec"
 )
 
 // JSONAnalyzer analyzes json payloads to build a spec

@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/builder"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/repos/messages_repo"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
-	"github.com/uesteibar/asyncapi-watcher/storage/db"
+	"github.com/uesteibar/scribano/asyncapi/builder"
+	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/spec"
+	"github.com/uesteibar/scribano/storage/db"
 )
 
 func getServerSpec() spec.ServerSpec {

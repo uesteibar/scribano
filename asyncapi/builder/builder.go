@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
+	"github.com/uesteibar/scribano/asyncapi/spec"
 )
 
 type Property struct {

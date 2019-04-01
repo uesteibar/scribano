@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/repos/messages_repo"
-	"github.com/uesteibar/asyncapi-watcher/storage/db"
-	"github.com/uesteibar/asyncapi-watcher/watcher"
-	"github.com/uesteibar/asyncapi-watcher/watcher/config"
-	yamlconfig "github.com/uesteibar/asyncapi-watcher/watcher/config/parsers/yaml_config"
-	"github.com/uesteibar/asyncapi-watcher/web/api"
+	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/storage/db"
+	"github.com/uesteibar/scribano/watcher"
+	"github.com/uesteibar/scribano/watcher/config"
+	yamlconfig "github.com/uesteibar/scribano/watcher/config/parsers/yaml_config"
+	"github.com/uesteibar/scribano/web/api"
 )
 
 func getLoader() config.Loader {

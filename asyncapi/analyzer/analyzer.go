@@ -3,8 +3,8 @@ package analyzer
 import (
 	"fmt"
 
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
-	"github.com/uesteibar/asyncapi-watcher/consumer"
+	"github.com/uesteibar/scribano/asyncapi/spec"
+	"github.com/uesteibar/scribano/consumer"
 )
 
 const jsonContentType = "application/json"

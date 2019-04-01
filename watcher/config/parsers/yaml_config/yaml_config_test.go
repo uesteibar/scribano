@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/uesteibar/asyncapi-watcher/watcher"
+	"github.com/uesteibar/scribano/watcher"
 )
 
 type mockLoader struct {

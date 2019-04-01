@@ -3,8 +3,8 @@ package yamlconfig
 import (
 	"errors"
 
-	"github.com/uesteibar/asyncapi-watcher/watcher"
-	"github.com/uesteibar/asyncapi-watcher/watcher/config"
+	"github.com/uesteibar/scribano/watcher"
+	"github.com/uesteibar/scribano/watcher/config"
 	"gopkg.in/yaml.v2"
 )
 

@@ -35,7 +35,7 @@ go run main.go -f fixtures/test/yaml_config.yml
 
 You can also fetch the configuration from a url
 ```
-go run main.go -u https://raw.githubusercontent.com/uesteibar/asyncapi-watcher/master/fixtures/test/yaml_config.yml
+go run main.go -u https://raw.githubusercontent.com/uesteibar/scribano/master/fixtures/test/yaml_config.yml
 ```
 
 ### Running tests

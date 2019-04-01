@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/streadway/amqp"
 	"github.com/stretchr/testify/assert"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/repos/messages_repo"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
-	"github.com/uesteibar/asyncapi-watcher/storage/db"
+	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/spec"
+	"github.com/uesteibar/scribano/storage/db"
 )
 
 const AMQPHost = "amqp://guest:guest@localhost"

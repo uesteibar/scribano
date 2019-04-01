@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/uesteibar/asyncapi-watcher/asyncapi/spec"
+	"github.com/uesteibar/scribano/asyncapi/spec"
 )
 
 func TestSpecBuilder(t *testing.T) {
