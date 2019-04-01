@@ -39,8 +39,9 @@ func analyze(msg consumer.Message) (spec.MessageSpec, error) {
 		)
 	}
 	return spec.MessageSpec{
-		Topic:   msg.RoutingKey,
-		Payload: a.GetPayloadSpec(msg.Body),
+		Topic:    msg.RoutingKey,
+		Exchange: msg.Exchange,
+		Payload:  a.GetPayloadSpec(msg.Body),
 	}, nil
 }
 

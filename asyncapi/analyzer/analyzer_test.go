@@ -28,11 +28,13 @@ func TestAnalyze_JSON(t *testing.T) {
 		ContentType: "application/json",
 		RoutingKey:  "test.routing.key",
 		Body:        []byte(sampleBody),
+		Exchange:    "/my-exchange",
 	}
 	select {
 	case res, _ := <-chOut:
 		expected := spec.MessageSpec{
-			Topic: "test.routing.key",
+			Topic:    "test.routing.key",
+			Exchange: "/my-exchange",
 			Payload: spec.PayloadSpec{
 				Type: "object",
 				Fields: []spec.FieldSpec{
@@ -74,6 +76,7 @@ func TestAnalyze_UnknownFormat(t *testing.T) {
 		ContentType: "plain/text",
 		RoutingKey:  "test.routing.key",
 		Body:        []byte("plain body"),
+		Exchange:    "/",
 	}
 
 	select {

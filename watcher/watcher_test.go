@@ -13,7 +13,7 @@ import (
 )
 
 const AMQPHost = "amqp://guest:guest@localhost"
-const Exchange = "/"
+const Exchange = "/other-exchange"
 
 func produce(topic, body string) {
 	conn, _ := amqp.Dial(AMQPHost)
@@ -42,10 +42,11 @@ func TestEndToEnd(t *testing.T) {
 	watcher := New(Config{Host: AMQPHost, RoutingKey: "#", Exchange: Exchange})
 	go watcher.Watch()
 
-	time.Sleep(time.Duration(100000) * 1000)
+	time.Sleep(time.Millisecond * 1000)
 
 	expected := spec.MessageSpec{
-		Topic: topic,
+		Topic:    topic,
+		Exchange: Exchange,
 		Payload: spec.PayloadSpec{
 			Type: "object",
 			Fields: []spec.FieldSpec{

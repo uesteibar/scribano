@@ -15,7 +15,8 @@ func TestSpecBuilder(t *testing.T) {
 	b.AddServerInfo(spec.ServerSpec{})
 
 	msg1 := spec.MessageSpec{
-		Topic: "some.topic",
+		Topic:    "some.topic",
+		Exchange: "/some-exchange",
 		Payload: spec.PayloadSpec{
 			Type: "object",
 			Fields: []spec.FieldSpec{
@@ -27,7 +28,8 @@ func TestSpecBuilder(t *testing.T) {
 	b.AddMessage(msg1)
 
 	msg2 := spec.MessageSpec{
-		Topic: "other.topic",
+		Topic:    "other.topic",
+		Exchange: "/other-exchange",
 		Payload: spec.PayloadSpec{
 			Type: "object",
 			Fields: []spec.FieldSpec{
@@ -47,10 +49,12 @@ func TestSpecBuilder(t *testing.T) {
 		},
 		Topics: map[string]Topic{
 			"some.topic": Topic{
-				Publish: Ref{RefKey: "#/components/messages/SomeTopic"},
+				Publish:  Ref{RefKey: "#/components/messages/SomeTopic"},
+				Exchange: "/some-exchange",
 			},
 			"other.topic": Topic{
-				Publish: Ref{RefKey: "#/components/messages/OtherTopic"},
+				Publish:  Ref{RefKey: "#/components/messages/OtherTopic"},
+				Exchange: "/other-exchange",
 			},
 		},
 		Components: Components{
@@ -90,12 +94,14 @@ func TestSpecBuilder(t *testing.T) {
 			"other.topic": {
 				"publish": {
 				  "$ref": "#/components/messages/OtherTopic"
-				}
+				},
+				"x-exchange": "/other-exchange"
 			},
 			"some.topic": {
 				"publish": {
 				  "$ref": "#/components/messages/SomeTopic"
-				}
+				},
+				"x-exchange": "/some-exchange"
 			}
 		},
 		"components": {

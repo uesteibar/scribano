@@ -1,6 +1,6 @@
 ---
 - host: "amqp://guest:guest@localhost"
-  exchange: "/"
+  exchange: "/other-exchange"
   routing_key: "#"
 - host: "amqp://guest:guest@localhost"
   exchange: "/other-exchange"

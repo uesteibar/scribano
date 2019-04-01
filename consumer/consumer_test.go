@@ -39,6 +39,7 @@ func TestConsumer(t *testing.T) {
 	case msg, _ := <-ch:
 		assert.Equal(t, "Testing world", string(msg.Body))
 		assert.Equal(t, topic, string(msg.RoutingKey))
+		assert.Equal(t, Exchange, msg.Exchange)
 		assert.Equal(t, "text/plain", string(msg.ContentType))
 	case <-time.After(time.Second):
 		t.Error("Expected to receive message, received nothing")

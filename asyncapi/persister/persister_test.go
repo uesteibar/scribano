@@ -23,7 +23,8 @@ func TestPersist(t *testing.T) {
 	topic := uuid.New().String()
 
 	msg := spec.MessageSpec{
-		Topic: topic,
+		Topic:    topic,
+		Exchange: "/test-exchange",
 		Payload: spec.PayloadSpec{
 			Type: "object",
 			Fields: []spec.FieldSpec{
@@ -44,7 +45,8 @@ func TestPersist(t *testing.T) {
 
 	// Update the message
 	uMsg := spec.MessageSpec{
-		Topic: topic,
+		Topic:    topic,
+		Exchange: "/test-exchange",
 		Payload: spec.PayloadSpec{
 			Type: "object",
 			Fields: []spec.FieldSpec{

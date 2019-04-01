@@ -23,13 +23,15 @@ type Message struct {
 	Body        []byte
 	ContentType string
 	RoutingKey  string
+	Exchange    string
 }
 
-func transformMessage(msg amqp.Delivery) Message {
+func (c *Consumer) transformMessage(msg amqp.Delivery) Message {
 	return Message{
 		Body:        msg.Body,
 		ContentType: msg.ContentType,
 		RoutingKey:  msg.RoutingKey,
+		Exchange:    c.Exchange,
 	}
 }
 
@@ -86,7 +88,7 @@ func (c *Consumer) Consume() {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received: %+v", d)
-			c.Ch <- transformMessage(d)
+			c.Ch <- c.transformMessage(d)
 		}
 	}()
 

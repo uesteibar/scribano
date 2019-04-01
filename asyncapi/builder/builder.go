@@ -29,7 +29,8 @@ type Ref struct {
 }
 
 type Topic struct {
-	Publish Ref `json:"publish"`
+	Publish  Ref    `json:"publish"`
+	Exchange string `json:"x-exchange"`
 }
 
 type Info struct {
@@ -83,7 +84,7 @@ func (b *SpecBuilder) AddMessage(msg spec.MessageSpec) *SpecBuilder {
 	if b.Spec.Topics == nil {
 		b.Spec.Topics = make(map[string]Topic)
 	}
-	b.Spec.Topics[msg.Topic] = Topic{Publish: refFor(msg)}
+	b.Spec.Topics[msg.Topic] = Topic{Publish: refFor(msg), Exchange: msg.Exchange}
 
 	if b.Spec.Components.Messages == nil {
 		b.Spec.Components.Messages = make(map[string]Message)

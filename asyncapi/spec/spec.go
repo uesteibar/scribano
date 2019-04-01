@@ -1,8 +1,9 @@
 package spec
 
 type MessageSpec struct {
-	Topic   string
-	Payload PayloadSpec
+	Topic    string
+	Exchange string
+	Payload  PayloadSpec
 }
 
 type PayloadSpec struct {

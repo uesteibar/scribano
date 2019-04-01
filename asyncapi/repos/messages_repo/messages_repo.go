@@ -11,8 +11,9 @@ import (
 const gormNotFound = "record not found"
 
 type MessageSpec struct {
-	Topic   string `gorm:"primary_key"`
-	Payload []byte
+	Topic    string `gorm:"primary_key"`
+	Exchange string
+	Payload  []byte
 }
 
 type MessagesRepo struct {
@@ -46,14 +47,14 @@ func transformMsg(msg spec.MessageSpec) (MessageSpec, error) {
 		return MessageSpec{}, err
 	}
 
-	return MessageSpec{Topic: msg.Topic, Payload: payload}, nil
+	return MessageSpec{Topic: msg.Topic, Exchange: msg.Exchange, Payload: payload}, nil
 }
 
 func transformToMsg(msg MessageSpec) spec.MessageSpec {
 	var p spec.PayloadSpec
 	json.Unmarshal(msg.Payload, &p)
 
-	return spec.MessageSpec{Topic: msg.Topic, Payload: p}
+	return spec.MessageSpec{Topic: msg.Topic, Exchange: msg.Exchange, Payload: p}
 }
 
 func (r *MessagesRepo) Create(msg spec.MessageSpec) error {
@@ -76,7 +77,7 @@ func (r *MessagesRepo) Find(topic string) (spec.MessageSpec, error) {
 		var p spec.PayloadSpec
 		json.Unmarshal(m.Payload, &p)
 
-		messageSpec := spec.MessageSpec{Topic: m.Topic, Payload: p}
+		messageSpec := spec.MessageSpec{Topic: m.Topic, Exchange: m.Exchange, Payload: p}
 
 		return messageSpec, nil
 	} else if err.Error() == gormNotFound {
