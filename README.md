@@ -1,4 +1,4 @@
-# AsyncAPI watcher
+# Scribano
 
 Builds an [asyncapi](https://www.asyncapi.com/) documentation for your microservices
 communicating through [rabbitmq](https://www.rabbitmq.com/).
