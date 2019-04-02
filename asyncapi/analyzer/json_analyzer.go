@@ -61,7 +61,9 @@ func fieldFor(k string, v interface{}) spec.FieldSpec {
 		return spec.FieldSpec{Name: k, Type: stringType}
 	case bool:
 		return spec.FieldSpec{Name: k, Type: booleanType}
-	default:
+	case map[string]interface{}:
 		return spec.FieldSpec{Name: k, Type: objectType, Fields: fieldsFor(v.(map[string]interface{}))}
+	default:
+		return spec.FieldSpec{Name: k, Type: stringType}
 	}
 }

@@ -83,7 +83,7 @@ func (c *Consumer) Consume() {
 	)
 	failOnError(err, "Failed to consume from queue")
 
-	log.Printf(" [*] Waiting for messages - broker: %s, exchange: %s, matcher: %s.", c.Host, c.Exchange, c.RoutingKey)
+	log.Printf(" [*] Waiting for messages - queue: %s, broker: %s, exchange: %s, matcher: %s.", q.Name, c.Host, c.Exchange, c.RoutingKey)
 
 	for d := range msgs {
 		log.Printf("Received: %+v", d)
