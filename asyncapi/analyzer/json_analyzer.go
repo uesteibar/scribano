@@ -57,12 +57,10 @@ func fieldFor(k string, v interface{}) spec.FieldSpec {
 	switch v.(type) {
 	case float64:
 		return spec.FieldSpec{Name: k, Type: inferNumberType(v)}
-	case string:
+	case string, nil:
 		return spec.FieldSpec{Name: k, Type: stringType}
 	case bool:
 		return spec.FieldSpec{Name: k, Type: booleanType}
-	case nil:
-		return spec.FieldSpec{Name: k, Type: unknownType}
 	default:
 		return spec.FieldSpec{Name: k, Type: objectType, Fields: fieldsFor(v.(map[string]interface{}))}
 	}

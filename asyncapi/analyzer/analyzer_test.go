@@ -55,7 +55,7 @@ func treatTypeAsJSON(t *testing.T, contentType string) {
 			},
 			spec.FieldSpec{
 				Name: "address",
-				Type: "unknown",
+				Type: "string",
 			},
 			spec.FieldSpec{
 				Name: "car",
