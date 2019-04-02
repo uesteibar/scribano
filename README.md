@@ -27,6 +27,12 @@ You can also fetch the configuration from a url
 go run main.go -u https://raw.githubusercontent.com/uesteibar/scribano/master/fixtures/test/yaml_config.yml
 ```
 
+## Running on docker
+
+```
+docker run -e PG_URL='postgresql://postgres:postgres@localhost:5433/asyncapi' uesteibar/scribano ./scribano -u https://raw.githubusercontent.com/uesteibar/scribano/master/fixtures/test/yaml_config.yml
+```
+
 ### Running tests
 
 Start the rabbitmq server
