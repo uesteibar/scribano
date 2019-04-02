@@ -9,7 +9,7 @@ import (
 	"github.com/uesteibar/scribano/consumer"
 )
 
-func TestAnalyze_JSON(t *testing.T) {
+func treatTypeAsJSON(t *testing.T, contentType string) {
 	chIn := make(chan consumer.Message)
 	chOut := make(chan spec.MessageSpec)
 
@@ -23,64 +23,81 @@ func TestAnalyze_JSON(t *testing.T) {
 			"grade": 9.5,
 			"canDrive": false,
 			"car": {
-				"brand": "mercedes",
-				"seats": 5
+				"brand": "mercedes"
 			}
 		}
 	`
 	chIn <- consumer.Message{
-		ContentType: "application/json",
+		ContentType: contentType,
 		RoutingKey:  "test.routing.key",
 		Body:        []byte(sampleBody),
 		Exchange:    "/my-exchange",
 	}
 	select {
 	case res, _ := <-chOut:
-		expected := spec.MessageSpec{
-			Topic:    "test.routing.key",
-			Exchange: "/my-exchange",
-			Payload: spec.PayloadSpec{
+		expectedFields := []spec.FieldSpec{
+			spec.FieldSpec{
+				Name: "name",
+				Type: "string",
+			},
+			spec.FieldSpec{
+				Name: "age",
+				Type: "integer",
+			},
+			spec.FieldSpec{
+				Name: "grade",
+				Type: "number",
+			},
+			spec.FieldSpec{
+				Name: "canDrive",
+				Type: "boolean",
+			},
+			spec.FieldSpec{
+				Name: "car",
 				Type: "object",
 				Fields: []spec.FieldSpec{
-					spec.FieldSpec{
-						Name: "name",
-						Type: "string",
-					},
-					spec.FieldSpec{
-						Name: "age",
-						Type: "integer",
-					},
-					spec.FieldSpec{
-						Name: "grade",
-						Type: "number",
-					},
-					spec.FieldSpec{
-						Name: "canDrive",
-						Type: "boolean",
-					},
-					spec.FieldSpec{
-						Name: "car",
-						Type: "object",
-						Fields: []spec.FieldSpec{
-							spec.FieldSpec{
-								Name: "brand",
-								Type: "string",
-							},
-							spec.FieldSpec{
-								Name: "seats",
-								Type: "integer",
-							},
-						},
-					},
+					spec.FieldSpec{Name: "brand", Type: "string"},
 				},
 			},
 		}
 
-		assert.Equal(t, expected, res)
+		assert.Equal(t, "test.routing.key", res.Topic)
+		assert.Equal(t, "/my-exchange", res.Exchange)
+		assert.Equal(t, "object", res.Payload.Type)
+
+		assert.ElementsMatch(t, expectedFields, res.Payload.Fields)
 	case <-time.After(3 * time.Second):
 		t.Error("Expected to receive message, didn't receive any.")
 	}
+}
 
+func TestAnalyze_JSON(t *testing.T) {
+	treatTypeAsJSON(t, "application/json")
+}
+
+func TestAnalyze_OctetStream(t *testing.T) {
+	treatTypeAsJSON(t, "application/octet-stream")
+}
+
+func TestAnalyze_JSON_InvalidContent(t *testing.T) {
+	chIn := make(chan consumer.Message)
+	chOut := make(chan spec.MessageSpec)
+
+	a := Analyzer{ChIn: chIn, ChOut: chOut}
+	go a.Watch()
+
+	chIn <- consumer.Message{
+		ContentType: "application/octet-stream",
+		RoutingKey:  "test.routing.key",
+		Body:        []byte("invalid body"),
+		Exchange:    "/",
+	}
+
+	select {
+	case res, _ := <-chOut:
+		t.Errorf("Expected to not receive message, received: %+v", res)
+	case <-time.After(time.Second):
+	}
 }
 
 func TestAnalyze_UnknownFormat(t *testing.T) {

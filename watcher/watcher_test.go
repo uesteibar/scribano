@@ -47,27 +47,23 @@ func TestEndToEnd(t *testing.T) {
 
 	time.Sleep(time.Millisecond * 1000)
 
-	expected := spec.MessageSpec{
-		Topic:    topic,
-		Exchange: Exchange,
-		Payload: spec.PayloadSpec{
+	expectedFields := []spec.FieldSpec{
+		spec.FieldSpec{Name: "name", Type: "string"},
+		spec.FieldSpec{Name: "age", Type: "integer"},
+		spec.FieldSpec{Name: "canDrive", Type: "boolean"},
+		spec.FieldSpec{
+			Name: "car",
 			Type: "object",
 			Fields: []spec.FieldSpec{
-				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "integer"},
-				spec.FieldSpec{Name: "canDrive", Type: "boolean"},
-				spec.FieldSpec{
-					Name: "car",
-					Type: "object",
-					Fields: []spec.FieldSpec{
-						spec.FieldSpec{Name: "brand", Type: "string"},
-					},
-				},
+				spec.FieldSpec{Name: "brand", Type: "string"},
 			},
 		},
 	}
 
 	m, err := repo.Find(topic)
 	assert.Nil(t, err)
-	assert.Equal(t, expected, m)
+	assert.Equal(t, topic, m.Topic)
+	assert.Equal(t, Exchange, m.Exchange)
+	assert.Equal(t, "object", m.Payload.Type)
+	assert.Equal(t, expectedFields, m.Payload.Fields)
 }

@@ -44,7 +44,7 @@ func (p *Persister) Persist(msg spec.MessageSpec) error {
 func (p *Persister) Watch() {
 	for msg := range p.ChIn {
 		if err := p.Persist(msg); err != nil {
-			log.Printf("Error: %s", err)
+			log.Printf("ERROR %s", err)
 		} else {
 			p.ChOut <- msg
 		}

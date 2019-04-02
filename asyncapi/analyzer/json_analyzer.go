@@ -10,18 +10,26 @@ import (
 type JSONAnalyzer struct{}
 
 const (
-	payloadType = "object"
+	booleanType = "boolean"
+	integerType = "integer"
+	numberType  = "number"
+	objectType  = "object"
+	stringType  = "string"
 	unknownType = "unknown"
 )
 
 // GetPayloadSpec analyzes a payload and returns the spec
-func (a JSONAnalyzer) GetPayloadSpec(payload []byte) spec.PayloadSpec {
+func (a JSONAnalyzer) GetPayloadSpec(payload []byte) (spec.PayloadSpec, error) {
 	var parsed map[string]interface{}
-	json.Unmarshal([]byte(payload), &parsed)
+	err := json.Unmarshal([]byte(payload), &parsed)
+
+	if err != nil {
+		return spec.PayloadSpec{}, err
+	}
 
 	fields := fieldsFor(parsed)
 
-	return spec.PayloadSpec{Fields: fields, Type: payloadType}
+	return spec.PayloadSpec{Fields: fields, Type: objectType}, nil
 }
 
 func fieldsFor(raw map[string]interface{}) []spec.FieldSpec {
@@ -39,10 +47,10 @@ func isRound(n float64) bool {
 
 func inferNumberType(n interface{}) string {
 	if isRound(n.(float64)) {
-		return "integer"
+		return integerType
 	}
 
-	return "number"
+	return numberType
 }
 
 func fieldFor(k string, v interface{}) spec.FieldSpec {
@@ -50,10 +58,10 @@ func fieldFor(k string, v interface{}) spec.FieldSpec {
 	case float64:
 		return spec.FieldSpec{Name: k, Type: inferNumberType(v)}
 	case string:
-		return spec.FieldSpec{Name: k, Type: "string"}
+		return spec.FieldSpec{Name: k, Type: stringType}
 	case bool:
-		return spec.FieldSpec{Name: k, Type: "boolean"}
+		return spec.FieldSpec{Name: k, Type: booleanType}
 	default:
-		return spec.FieldSpec{Name: k, Type: "object", Fields: fieldsFor(v.(map[string]interface{}))}
+		return spec.FieldSpec{Name: k, Type: objectType, Fields: fieldsFor(v.(map[string]interface{}))}
 	}
 }
