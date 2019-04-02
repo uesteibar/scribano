@@ -22,9 +22,37 @@ func TestSpecBuilder(t *testing.T) {
 			Fields: []spec.FieldSpec{
 				spec.FieldSpec{Name: "name", Type: "string"},
 				spec.FieldSpec{Name: "age", Type: "number"},
-				spec.FieldSpec{
-					Name: "car",
-					Type: "object",
+				spec.FieldSpec{Name: "emptyHash", Type: "object"},
+				spec.FieldSpec{Name: "fines", Type: "array",
+					Item: &spec.FieldSpec{
+						Type: "string",
+					},
+				},
+				spec.FieldSpec{Name: "emptyHashes", Type: "array",
+					Item: &spec.FieldSpec{
+						Type: "object",
+					},
+				},
+				spec.FieldSpec{Name: "friends", Type: "array",
+					Item: &spec.FieldSpec{
+						Type: "object",
+						Fields: []spec.FieldSpec{
+							spec.FieldSpec{
+								Name: "name",
+								Type: "string",
+							},
+						},
+					},
+				},
+				spec.FieldSpec{Name: "matrix", Type: "array",
+					Item: &spec.FieldSpec{
+						Type: "array",
+						Item: &spec.FieldSpec{
+							Type: "integer",
+						},
+					},
+				},
+				spec.FieldSpec{Name: "car", Type: "object",
 					Fields: []spec.FieldSpec{
 						spec.FieldSpec{Name: "brand", Type: "string"},
 					},
@@ -70,8 +98,28 @@ func TestSpecBuilder(t *testing.T) {
 					Payload: Payload{
 						Type: "object",
 						Properties: map[string]Property{
-							"name": Property{Type: "string"},
-							"age":  Property{Type: "number"},
+							"name":      Property{Type: "string"},
+							"age":       Property{Type: "number"},
+							"emptyHash": Property{Type: "object", Properties: map[string]Property{}},
+							"fines": Property{Type: "array", Item: &Property{
+								Type: "string",
+							}},
+							"emptyHashes": Property{Type: "array", Item: &Property{
+								Type:       "object",
+								Properties: map[string]Property{},
+							}},
+							"friends": Property{Type: "array", Item: &Property{
+								Type: "object",
+								Properties: map[string]Property{
+									"name": Property{Type: "string"},
+								},
+							}},
+							"matrix": Property{Type: "array", Item: &Property{
+								Type: "array",
+								Item: &Property{
+									Type: "integer",
+								},
+							}},
 							"car": Property{
 								Type: "object",
 								Properties: map[string]Property{
@@ -124,7 +172,7 @@ func TestSpecBuilder(t *testing.T) {
 						"type":"object",
 						"properties": {
 							"uuid": {
-								"type":"string"
+								"type": "string"
 							}
 						}
 					}
@@ -134,18 +182,53 @@ func TestSpecBuilder(t *testing.T) {
 						"type":"object",
 						"properties": {
 							"age": {
-								"type":"number"
+								"type": "number"
 							},
 							"car": {
-								"type":"object",
+								"type": "object",
 								"properties": {
 									"brand": {
-										"type":"string"
+										"type": "string"
+									}
+								}
+							},
+							"emptyHash": {
+								"type": "object"
+							},
+							"emptyHashes": {
+								"type": "array",
+								"items": {
+									"type": "object"
+								}
+							},
+							"fines": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"friends": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"name": {
+											"type": "string"
+										}
+									}
+								}
+							},
+							"matrix": {
+								"type": "array",
+								"items": {
+									"type": "array",
+									"items": {
+										"type": "integer"
 									}
 								}
 							},
 							"name": {
-								"type":"string"
+								"type": "string"
 							}
 						}
 					}

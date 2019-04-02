@@ -33,6 +33,10 @@ func TestEndToEnd(t *testing.T) {
 			"name": "infer type",
 			"age": 27,
 			"canDrive": false,
+			"friends": [
+				{ "name": "jose" },
+				{ "name": "maria" }
+			],
 			"car": {
 				"brand": "ford"
 			}
@@ -51,6 +55,14 @@ func TestEndToEnd(t *testing.T) {
 		spec.FieldSpec{Name: "name", Type: "string"},
 		spec.FieldSpec{Name: "age", Type: "integer"},
 		spec.FieldSpec{Name: "canDrive", Type: "boolean"},
+		spec.FieldSpec{Name: "friends", Type: "array",
+			Item: &spec.FieldSpec{
+				Type: "object",
+				Fields: []spec.FieldSpec{
+					spec.FieldSpec{Name: "name", Type: "string"},
+				},
+			},
+		},
 		spec.FieldSpec{
 			Name: "car",
 			Type: "object",
@@ -65,5 +77,5 @@ func TestEndToEnd(t *testing.T) {
 	assert.Equal(t, topic, m.Topic)
 	assert.Equal(t, Exchange, m.Exchange)
 	assert.Equal(t, "object", m.Payload.Type)
-	assert.Equal(t, expectedFields, m.Payload.Fields)
+	assert.ElementsMatch(t, expectedFields, m.Payload.Fields)
 }

@@ -15,6 +15,7 @@ type FieldSpec struct {
 	Name   string      `json:"name"`
 	Type   string      `json:"type"`
 	Fields []FieldSpec `json:"fields"`
+	Item   *FieldSpec  `json:"Item"`
 }
 
 type ServerSpec struct {

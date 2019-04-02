@@ -31,6 +31,37 @@ func TestPersist(t *testing.T) {
 				spec.FieldSpec{Name: "name", Type: "string"},
 				spec.FieldSpec{Name: "age", Type: "number"},
 				spec.FieldSpec{
+					Name: "emptyHash",
+					Type: "object",
+				},
+				spec.FieldSpec{
+					Name: "fines",
+					Type: "array",
+					Item: &spec.FieldSpec{
+						Type: "string",
+					},
+				},
+				spec.FieldSpec{
+					Name: "emptyHashes",
+					Type: "array",
+					Item: &spec.FieldSpec{
+						Type: "object",
+					},
+				},
+				spec.FieldSpec{
+					Name: "friends",
+					Type: "array",
+					Item: &spec.FieldSpec{
+						Type: "object",
+						Fields: []spec.FieldSpec{
+							spec.FieldSpec{
+								Name: "name",
+								Type: "string",
+							},
+						},
+					},
+				},
+				spec.FieldSpec{
 					Name: "car",
 					Type: "object",
 					Fields: []spec.FieldSpec{

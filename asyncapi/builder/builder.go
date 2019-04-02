@@ -10,6 +10,7 @@ import (
 type Property struct {
 	Type       string              `json:"type"`
 	Properties map[string]Property `json:"properties,omitempty"`
+	Item       *Property           `json:"items,omitempty"`
 }
 
 type Payload struct {
@@ -50,6 +51,17 @@ type SpecBuilder struct {
 	Spec AsyncAPISpec
 }
 
+func buildArrayItem(f *spec.FieldSpec) *Property {
+	p := &Property{Type: f.Type}
+	if f.Type == "object" {
+		p.Properties = buildProperties(f.Fields)
+	} else if f.Type == "array" {
+		p.Item = buildArrayItem(f.Item)
+	}
+
+	return p
+}
+
 func buildProperties(fields []spec.FieldSpec) map[string]Property {
 	properties := make(map[string]Property)
 
@@ -57,6 +69,8 @@ func buildProperties(fields []spec.FieldSpec) map[string]Property {
 		p := Property{Type: f.Type}
 		if f.Type == "object" {
 			p.Properties = buildProperties(f.Fields)
+		} else if f.Type == "array" {
+			p.Item = buildArrayItem(f.Item)
 		}
 
 		properties[f.Name] = p

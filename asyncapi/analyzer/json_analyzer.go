@@ -10,6 +10,7 @@ import (
 type JSONAnalyzer struct{}
 
 const (
+	arrayType   = "array"
 	booleanType = "boolean"
 	integerType = "integer"
 	numberType  = "number"
@@ -53,17 +54,47 @@ func inferNumberType(n interface{}) string {
 	return numberType
 }
 
-func fieldFor(k string, v interface{}) spec.FieldSpec {
+func typeFor(v interface{}) string {
 	switch v.(type) {
 	case float64:
-		return spec.FieldSpec{Name: k, Type: inferNumberType(v)}
+		return inferNumberType(v)
 	case string, nil:
-		return spec.FieldSpec{Name: k, Type: stringType}
+		return stringType
 	case bool:
-		return spec.FieldSpec{Name: k, Type: booleanType}
+		return booleanType
+	case []interface{}:
+		return arrayType
+	case map[string]interface{}:
+		return objectType
+	default:
+		return stringType
+	}
+}
+
+func arrayItemFor(l []interface{}) *spec.FieldSpec {
+	var item interface{}
+	if len(l) > 0 {
+		item = l[0]
+	}
+	t := typeFor(item)
+	a := &spec.FieldSpec{Type: t}
+
+	if t == "object" {
+		a.Fields = fieldsFor(item.(map[string]interface{}))
+	} else if t == "array" {
+		a.Item = arrayItemFor(item.([]interface{}))
+	}
+
+	return a
+}
+
+func fieldFor(k string, v interface{}) spec.FieldSpec {
+	switch v.(type) {
+	case []interface{}:
+		return spec.FieldSpec{Name: k, Type: arrayType, Item: arrayItemFor(v.([]interface{}))}
 	case map[string]interface{}:
 		return spec.FieldSpec{Name: k, Type: objectType, Fields: fieldsFor(v.(map[string]interface{}))}
 	default:
-		return spec.FieldSpec{Name: k, Type: stringType}
+		return spec.FieldSpec{Name: k, Type: typeFor(v)}
 	}
 }
