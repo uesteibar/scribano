@@ -1,6 +1,7 @@
 package consumer
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/streadway/amqp"
@@ -56,12 +57,12 @@ func (c *Consumer) Consume() {
 	failOnError(err, "Failed to declare an exchange")
 
 	q, err := ch.QueueDeclare(
-		c.RoutingKey, // name
-		false,        // durable
-		false,        // delete when usused
-		false,        // exclusive
-		false,        // no-wait
-		nil,          // arguments
+		fmt.Sprintf("%s_%s", c.Exchange, c.RoutingKey),
+		false, // durable
+		false, // delete when usused
+		false, // exclusive
+		false, // no-wait
+		nil,   // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 
