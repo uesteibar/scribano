@@ -61,7 +61,7 @@ func (a *Analyzer) Watch() {
 		} else {
 			a.ChOut <- spec
 		}
-
 	}
 
+	log.Printf("INFO finished running analyzer")
 }

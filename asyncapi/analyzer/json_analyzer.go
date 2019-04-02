@@ -15,7 +15,7 @@ const (
 	numberType  = "number"
 	objectType  = "object"
 	stringType  = "string"
-	unknownType = "unknown"
+	unknownType = "binary"
 )
 
 // GetPayloadSpec analyzes a payload and returns the spec
@@ -61,6 +61,8 @@ func fieldFor(k string, v interface{}) spec.FieldSpec {
 		return spec.FieldSpec{Name: k, Type: stringType}
 	case bool:
 		return spec.FieldSpec{Name: k, Type: booleanType}
+	case nil:
+		return spec.FieldSpec{Name: k, Type: unknownType}
 	default:
 		return spec.FieldSpec{Name: k, Type: objectType, Fields: fieldsFor(v.(map[string]interface{}))}
 	}

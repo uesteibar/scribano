@@ -22,6 +22,7 @@ func treatTypeAsJSON(t *testing.T, contentType string) {
 			"age": 27,
 			"grade": 9.5,
 			"canDrive": false,
+			"address": null,
 			"car": {
 				"brand": "mercedes"
 			}
@@ -51,6 +52,10 @@ func treatTypeAsJSON(t *testing.T, contentType string) {
 			spec.FieldSpec{
 				Name: "canDrive",
 				Type: "boolean",
+			},
+			spec.FieldSpec{
+				Name: "address",
+				Type: "unknown",
 			},
 			spec.FieldSpec{
 				Name: "car",

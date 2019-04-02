@@ -39,11 +39,9 @@ func (c *Consumer) transformMessage(msg amqp.Delivery) Message {
 func (c *Consumer) Consume() {
 	conn, err := amqp.Dial(c.Host)
 	failOnError(err, "Failed to connect to RabbitMQ")
-	defer conn.Close()
 
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to open a channel")
-	defer ch.Close()
 
 	err = ch.ExchangeDeclare(
 		c.Exchange, // name
@@ -57,7 +55,7 @@ func (c *Consumer) Consume() {
 	failOnError(err, "Failed to declare an exchange")
 
 	q, err := ch.QueueDeclare(
-		fmt.Sprintf("%s_%s", c.Exchange, c.RoutingKey),
+		fmt.Sprintf("scribano_watcher_%s", c.Exchange),
 		false, // durable
 		false, // delete when usused
 		false, // exclusive
@@ -83,17 +81,12 @@ func (c *Consumer) Consume() {
 		false,  // no-wait
 		nil,    // args
 	)
-
-	forever := make(chan bool)
-
-	go func() {
-		for d := range msgs {
-			log.Printf("Received: %+v", d)
-			c.Ch <- c.transformMessage(d)
-		}
-	}()
+	failOnError(err, "Failed to consume from queue")
 
 	log.Printf(" [*] Waiting for messages - broker: %s, exchange: %s, matcher: %s.", c.Host, c.Exchange, c.RoutingKey)
 
-	<-forever
+	for d := range msgs {
+		log.Printf("Received: %+v", d)
+		c.Ch <- c.transformMessage(d)
+	}
 }

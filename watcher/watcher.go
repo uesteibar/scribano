@@ -44,9 +44,11 @@ func (w Watcher) Watch() {
 
 	chPersisted := make(chan spec.MessageSpec)
 	p := persister.New(chAnalyzed, chPersisted, db.DB{})
-	p.Watch()
+	go p.Watch()
 
 	for msg := range chPersisted {
 		log.Printf("INFO Persisted: %+v", msg)
 	}
+
+	log.Printf("INFO finished running watcher")
 }
