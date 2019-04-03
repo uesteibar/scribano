@@ -4,7 +4,9 @@ Builds an [asyncapi](https://www.asyncapi.com/) documentation for your microserv
 communicating through [rabbitmq](https://www.rabbitmq.com/).
 
 It listens to all published amqp messages and keeps an updated asyncapi
-compliant documenation served at `/asyncapi`.
+compliant documentation served at `/asyncapi`.
+
+Sample configuration can be found [here](https://github.com/uesteibar/scribano/blob/master/fixtures/test/yaml_config.yml).
 
 ## Running locally
 

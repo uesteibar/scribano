@@ -47,7 +47,7 @@ func TestEndToEnd(t *testing.T) {
 	topic = "key.test"
 	produce(topic, body)
 
-	watcher := New(Config{Host: AMQPHost, RoutingKey: "#", Exchange: Exchange})
+	watcher := New(Config{Host: AMQPHost, RoutingKey: "#", Exchange: Exchange, ExchangeType: "topic"})
 	go watcher.Watch()
 
 	time.Sleep(time.Millisecond * 1000)

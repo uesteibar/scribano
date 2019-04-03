@@ -11,9 +11,10 @@ import (
 )
 
 type Config struct {
-	Host       string
-	RoutingKey string
-	Exchange   string
+	Host         string
+	RoutingKey   string
+	Exchange     string
+	ExchangeType string
 }
 
 type Watcher struct {
@@ -28,10 +29,11 @@ func New(c Config) Watcher {
 func (w Watcher) Watch() {
 	chConsumed := make(chan consumer.Message)
 	c := consumer.Consumer{
-		Host:       w.Config.Host,
-		RoutingKey: w.Config.RoutingKey,
-		Exchange:   w.Config.Exchange,
-		Ch:         chConsumed,
+		Host:         w.Config.Host,
+		RoutingKey:   w.Config.RoutingKey,
+		Exchange:     w.Config.Exchange,
+		ExchangeType: w.Config.ExchangeType,
+		Ch:           chConsumed,
 	}
 
 	go c.Consume()

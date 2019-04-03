@@ -14,10 +14,11 @@ func failOnError(err error, msg string) {
 }
 
 type Consumer struct {
-	Host       string
-	RoutingKey string
-	Exchange   string
-	Ch         chan Message
+	Host         string
+	RoutingKey   string
+	Exchange     string
+	ExchangeType string
+	Ch           chan Message
 }
 
 type Message struct {
@@ -44,13 +45,13 @@ func (c *Consumer) Consume() {
 	failOnError(err, "Failed to open a channel")
 
 	err = ch.ExchangeDeclare(
-		c.Exchange, // name
-		"topic",    // type
-		true,       // durable
-		false,      // auto-deleted
-		false,      // internal
-		false,      // no-wait
-		nil,        // arguments
+		c.Exchange,     // name
+		c.ExchangeType, // type
+		true,           // durable
+		false,          // auto-deleted
+		false,          // internal
+		false,          // no-wait
+		nil,            // arguments
 	)
 	failOnError(err, "Failed to declare an exchange")
 

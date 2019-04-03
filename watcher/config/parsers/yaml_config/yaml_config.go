@@ -14,10 +14,13 @@ type YamlConfig struct {
 }
 
 type parsedConfig struct {
-	Host       string `yaml:"host"`
-	Exchange   string `yaml:"exchange"`
-	RoutingKey string `yaml:"routing_key"`
+	Host         string `yaml:"host"`
+	Exchange     string `yaml:"exchange"`
+	ExchangeType string `yaml:"exchange_type"`
+	RoutingKey   string `yaml:"routing_key"`
 }
+
+const defaultExchangeType = "topic"
 
 func validConfig(c parsedConfig) bool {
 	return c.Host != "" && c.Exchange != "" && c.RoutingKey != ""
@@ -62,12 +65,18 @@ func (c YamlConfig) Parse() ([]watcher.Config, error) {
 	}
 
 	for _, parsedConfig := range parsedConfigs {
+		exchangeType := parsedConfig.ExchangeType
+		if exchangeType == "" {
+			exchangeType = defaultExchangeType
+		}
+
 		configs = append(
 			configs,
 			watcher.Config{
-				Host:       parsedConfig.Host,
-				Exchange:   parsedConfig.Exchange,
-				RoutingKey: parsedConfig.RoutingKey,
+				Host:         parsedConfig.Host,
+				Exchange:     parsedConfig.Exchange,
+				ExchangeType: exchangeType,
+				RoutingKey:   parsedConfig.RoutingKey,
 			})
 	}
 

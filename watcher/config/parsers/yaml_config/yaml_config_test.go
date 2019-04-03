@@ -23,6 +23,7 @@ func TestParse(t *testing.T) {
   routing_key: "#"
 - host: "amqp://guest:guest@localhost"
   exchange: "/other-exchange"
+  exchange_type: "direct"
   routing_key: "key.*"`),
 	}
 	parser := New(loader)
@@ -31,14 +32,16 @@ func TestParse(t *testing.T) {
 	assert.Nil(t, err)
 	expected := []watcher.Config{
 		watcher.Config{
-			Host:       "amqp://guest:guest@localhost",
-			Exchange:   "/",
-			RoutingKey: "#",
+			Host:         "amqp://guest:guest@localhost",
+			Exchange:     "/",
+			ExchangeType: "topic",
+			RoutingKey:   "#",
 		},
 		watcher.Config{
-			Host:       "amqp://guest:guest@localhost",
-			Exchange:   "/other-exchange",
-			RoutingKey: "key.*",
+			Host:         "amqp://guest:guest@localhost",
+			Exchange:     "/other-exchange",
+			ExchangeType: "direct",
+			RoutingKey:   "key.*",
 		},
 	}
 	assert.Equal(t, expected, configs)
