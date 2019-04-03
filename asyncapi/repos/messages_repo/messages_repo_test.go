@@ -123,3 +123,36 @@ func TestFindAll(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, expectedMsgs, msgs)
 }
+
+func TestFindByExchange(t *testing.T) {
+	repo := New(db.GetUniqueDB())
+	repo.Migrate()
+
+	msg1 := spec.MessageSpec{
+		Topic:    uuid.New().String(),
+		Exchange: "correct",
+		Payload: spec.PayloadSpec{
+			Type:   "object",
+			Fields: []spec.FieldSpec{},
+		},
+	}
+	repo.Create(msg1)
+
+	msg2 := spec.MessageSpec{
+		Topic:    uuid.New().String(),
+		Exchange: "other",
+		Payload: spec.PayloadSpec{
+			Type:   "object",
+			Fields: []spec.FieldSpec{},
+		},
+	}
+	repo.Create(msg2)
+
+	msgs, err := repo.FindByExchange("correct")
+	assert.Nil(t, err)
+	assert.Equal(t, []spec.MessageSpec{msg1}, msgs)
+
+	msgs, err = repo.FindByExchange("incorrect")
+	assert.Nil(t, err)
+	assert.Equal(t, []spec.MessageSpec{}, msgs)
+}

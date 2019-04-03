@@ -259,3 +259,45 @@ func TestSpecBuilder(t *testing.T) {
 
 	assert.Equal(t, expectedJSON, string(json))
 }
+
+func TestSpecBuilder_NoMessages(t *testing.T) {
+	b := SpecBuilder{}
+
+	b.AddServerInfo(spec.ServerSpec{})
+
+	res := b.Build()
+
+	expected := AsyncAPISpec{
+		AsyncAPI: "1.0.0",
+		Info: Info{
+			Title:   "",
+			Version: "",
+		},
+		Topics: map[string]Topic{},
+		Components: Components{
+			Messages: map[string]Message{},
+		},
+	}
+
+	assert.Equal(t, expected, res)
+
+	json, _ := json.Marshal(res)
+
+	expectedJSON := `{
+		"asyncapi": "1.0.0",
+		"info": {
+			"title": "",
+			"version": ""
+		},
+		"topics": {},
+		"components": {
+			"messages": {}
+		}
+	}`
+
+	expectedJSON = strings.Replace(expectedJSON, "\n", "", -1)
+	expectedJSON = strings.Replace(expectedJSON, "\t", "", -1)
+	expectedJSON = strings.Replace(expectedJSON, " ", "", -1)
+
+	assert.Equal(t, expectedJSON, string(json))
+}

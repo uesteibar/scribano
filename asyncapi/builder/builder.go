@@ -127,5 +127,12 @@ func (b *SpecBuilder) AddServerInfo(info spec.ServerSpec) *SpecBuilder {
 }
 
 func (b *SpecBuilder) Build() AsyncAPISpec {
+	if b.Spec.Topics == nil {
+		b.Spec.Topics = make(map[string]Topic)
+	}
+	if b.Spec.Components.Messages == nil {
+		b.Spec.Components.Messages = make(map[string]Message)
+	}
+
 	return b.Spec
 }

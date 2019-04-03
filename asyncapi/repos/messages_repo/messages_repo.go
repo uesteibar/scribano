@@ -93,7 +93,7 @@ func (r *MessagesRepo) FindAll() ([]spec.MessageSpec, error) {
 	var msgs []MessageSpec
 
 	if err := conn.Find(&msgs).Error; err == nil {
-		var messageSpecs []spec.MessageSpec
+		messageSpecs := []spec.MessageSpec{}
 
 		for _, m := range msgs {
 			msg := transformToMsg(m)
@@ -101,13 +101,29 @@ func (r *MessagesRepo) FindAll() ([]spec.MessageSpec, error) {
 		}
 
 		return messageSpecs, nil
-	} else if err.Error() == gormNotFound {
-		return []spec.MessageSpec{}, NewErrNotFound()
 	} else {
 		return []spec.MessageSpec{}, err
 	}
 }
 
+func (r *MessagesRepo) FindByExchange(exchange string) ([]spec.MessageSpec, error) {
+	conn := r.db.Open()
+	defer conn.Close()
+	var msgs []MessageSpec
+
+	if err := conn.Where(&MessageSpec{Exchange: exchange}).Find(&msgs).Error; err == nil {
+		messageSpecs := []spec.MessageSpec{}
+
+		for _, m := range msgs {
+			msg := transformToMsg(m)
+			messageSpecs = append(messageSpecs, msg)
+		}
+
+		return messageSpecs, nil
+	} else {
+		return []spec.MessageSpec{}, err
+	}
+}
 func (r *MessagesRepo) Update(msg spec.MessageSpec) error {
 	conn := r.db.Open()
 	defer conn.Close()
