@@ -14,6 +14,7 @@ type PayloadSpec struct {
 type FieldSpec struct {
 	Name   string      `json:"name"`
 	Type   string      `json:"type"`
+	Format string      `json:"format"`
 	Fields []FieldSpec `json:"fields"`
 	Item   *FieldSpec  `json:"Item"`
 }

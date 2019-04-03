@@ -23,6 +23,7 @@ func TestSpecBuilder(t *testing.T) {
 				spec.FieldSpec{Name: "name", Type: "string"},
 				spec.FieldSpec{Name: "age", Type: "number"},
 				spec.FieldSpec{Name: "emptyHash", Type: "object"},
+				spec.FieldSpec{Name: "birthDate", Type: "string", Format: "date"},
 				spec.FieldSpec{Name: "fines", Type: "array",
 					Item: &spec.FieldSpec{
 						Type: "string",
@@ -40,6 +41,11 @@ func TestSpecBuilder(t *testing.T) {
 							spec.FieldSpec{
 								Name: "name",
 								Type: "string",
+							},
+							spec.FieldSpec{
+								Name:   "birthDate",
+								Type:   "string",
+								Format: "date",
 							},
 						},
 					},
@@ -100,6 +106,7 @@ func TestSpecBuilder(t *testing.T) {
 						Properties: map[string]Property{
 							"name":      Property{Type: "string"},
 							"age":       Property{Type: "number"},
+							"birthDate": Property{Type: "string", Format: "date"},
 							"emptyHash": Property{Type: "object", Properties: map[string]Property{}},
 							"fines": Property{Type: "array", Item: &Property{
 								Type: "string",
@@ -111,7 +118,8 @@ func TestSpecBuilder(t *testing.T) {
 							"friends": Property{Type: "array", Item: &Property{
 								Type: "object",
 								Properties: map[string]Property{
-									"name": Property{Type: "string"},
+									"birthDate": Property{Type: "string", Format: "date"},
+									"name":      Property{Type: "string"},
 								},
 							}},
 							"matrix": Property{Type: "array", Item: &Property{
@@ -184,6 +192,10 @@ func TestSpecBuilder(t *testing.T) {
 							"age": {
 								"type": "number"
 							},
+							"birthDate": {
+								"type": "string",
+								"format": "date"
+							},
 							"car": {
 								"type": "object",
 								"properties": {
@@ -212,6 +224,10 @@ func TestSpecBuilder(t *testing.T) {
 								"items": {
 									"type": "object",
 									"properties": {
+										"birthDate": {
+											"type": "string",
+											"format": "date"
+										},
 										"name": {
 											"type": "string"
 										}

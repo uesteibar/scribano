@@ -33,6 +33,7 @@ func TestEndToEnd(t *testing.T) {
 			"name": "infer type",
 			"age": 27,
 			"canDrive": false,
+			"birthDate": "1991-08-29",
 			"friends": [
 				{ "name": "jose" },
 				{ "name": "maria" }
@@ -55,6 +56,7 @@ func TestEndToEnd(t *testing.T) {
 		spec.FieldSpec{Name: "name", Type: "string"},
 		spec.FieldSpec{Name: "age", Type: "integer"},
 		spec.FieldSpec{Name: "canDrive", Type: "boolean"},
+		spec.FieldSpec{Name: "birthDate", Type: "string", Format: "date"},
 		spec.FieldSpec{Name: "friends", Type: "array",
 			Item: &spec.FieldSpec{
 				Type: "object",

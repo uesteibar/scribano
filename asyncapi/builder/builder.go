@@ -9,6 +9,7 @@ import (
 
 type Property struct {
 	Type       string              `json:"type"`
+	Format     string              `json:"format,omitempty"`
 	Properties map[string]Property `json:"properties,omitempty"`
 	Item       *Property           `json:"items,omitempty"`
 }
@@ -66,7 +67,7 @@ func buildProperties(fields []spec.FieldSpec) map[string]Property {
 	properties := make(map[string]Property)
 
 	for _, f := range fields {
-		p := Property{Type: f.Type}
+		p := Property{Type: f.Type, Format: f.Format}
 		if f.Type == "object" {
 			p.Properties = buildProperties(f.Fields)
 		} else if f.Type == "array" {

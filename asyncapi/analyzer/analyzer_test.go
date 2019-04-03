@@ -22,6 +22,8 @@ func treatTypeAsJSON(t *testing.T, contentType string) {
 			"age": 27,
 			"grade": 9.5,
 			"canDrive": false,
+			"birthDate": "1991-08-29",
+			"lastLogin": "2015-06-10T13:23:30-08:00",
 			"address": null,
 			"emptyHash": {},
 			"fines": [],
@@ -63,6 +65,16 @@ func treatTypeAsJSON(t *testing.T, contentType string) {
 			spec.FieldSpec{
 				Name: "canDrive",
 				Type: "boolean",
+			},
+			spec.FieldSpec{
+				Name:   "birthDate",
+				Type:   "string",
+				Format: "date",
+			},
+			spec.FieldSpec{
+				Name:   "lastLogin",
+				Type:   "string",
+				Format: "date-time",
 			},
 			spec.FieldSpec{
 				Name: "address",
@@ -132,48 +144,48 @@ func TestAnalyze_JSON(t *testing.T) {
 	treatTypeAsJSON(t, "application/json")
 }
 
-// func TestAnalyze_OctetStream(t *testing.T) {
-// treatTypeAsJSON(t, "application/octet-stream")
-// }
-//
-// func TestAnalyze_JSON_InvalidContent(t *testing.T) {
-// chIn := make(chan consumer.Message)
-// chOut := make(chan spec.MessageSpec)
-//
-// a := Analyzer{ChIn: chIn, ChOut: chOut}
-// go a.Watch()
-//
-// chIn <- consumer.Message{
-// ContentType: "application/octet-stream",
-// RoutingKey:  "test.routing.key",
-// Body:        []byte("invalid body"),
-// Exchange:    "/",
-// }
-//
-// select {
-// case res, _ := <-chOut:
-// t.Errorf("Expected to not receive message, received: %+v", res)
-// case <-time.After(time.Second):
-// }
-// }
-//
-// func TestAnalyze_UnknownFormat(t *testing.T) {
-// chIn := make(chan consumer.Message)
-// chOut := make(chan spec.MessageSpec)
-//
-// a := Analyzer{ChIn: chIn, ChOut: chOut}
-// go a.Watch()
-//
-// chIn <- consumer.Message{
-// ContentType: "plain/text",
-// RoutingKey:  "test.routing.key",
-// Body:        []byte("plain body"),
-// Exchange:    "/",
-// }
-//
-// select {
-// case res, _ := <-chOut:
-// t.Errorf("Expected to not receive message, received: %+v", res)
-// case <-time.After(time.Second):
-// }
-// }
+func TestAnalyze_OctetStream(t *testing.T) {
+	treatTypeAsJSON(t, "application/octet-stream")
+}
+
+func TestAnalyze_JSON_InvalidContent(t *testing.T) {
+	chIn := make(chan consumer.Message)
+	chOut := make(chan spec.MessageSpec)
+
+	a := Analyzer{ChIn: chIn, ChOut: chOut}
+	go a.Watch()
+
+	chIn <- consumer.Message{
+		ContentType: "application/octet-stream",
+		RoutingKey:  "test.routing.key",
+		Body:        []byte("invalid body"),
+		Exchange:    "/",
+	}
+
+	select {
+	case res, _ := <-chOut:
+		t.Errorf("Expected to not receive message, received: %+v", res)
+	case <-time.After(time.Second):
+	}
+}
+
+func TestAnalyze_UnknownFormat(t *testing.T) {
+	chIn := make(chan consumer.Message)
+	chOut := make(chan spec.MessageSpec)
+
+	a := Analyzer{ChIn: chIn, ChOut: chOut}
+	go a.Watch()
+
+	chIn <- consumer.Message{
+		ContentType: "plain/text",
+		RoutingKey:  "test.routing.key",
+		Body:        []byte("plain body"),
+		Exchange:    "/",
+	}
+
+	select {
+	case res, _ := <-chOut:
+		t.Errorf("Expected to not receive message, received: %+v", res)
+	case <-time.After(time.Second):
+	}
+}
