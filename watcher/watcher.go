@@ -27,6 +27,8 @@ func New(c Config) Watcher {
 
 // Watch the amqp server for incoming messages and store the spec
 func (w Watcher) Watch() {
+	dbConn := db.DB{}
+
 	chConsumed := make(chan consumer.Message)
 	c := consumer.Consumer{
 		Host:         w.Config.Host,
@@ -40,12 +42,12 @@ func (w Watcher) Watch() {
 
 	chAnalyzed := make(chan spec.MessageSpec)
 
-	a := analyzer.Analyzer{ChIn: chConsumed, ChOut: chAnalyzed}
+	a := analyzer.New(chConsumed, chAnalyzed, dbConn)
 
 	go a.Watch()
 
 	chPersisted := make(chan spec.MessageSpec)
-	p := persister.New(chAnalyzed, chPersisted, db.DB{})
+	p := persister.New(chAnalyzed, chPersisted, dbConn)
 	go p.Watch()
 
 	for msg := range chPersisted {

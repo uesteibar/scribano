@@ -19,38 +19,39 @@ func TestSpecBuilder(t *testing.T) {
 		Exchange: "/some-exchange",
 		Payload: spec.PayloadSpec{
 			Type: "object",
-			Fields: []spec.FieldSpec{
-				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "number"},
-				spec.FieldSpec{Name: "emptyHash", Type: "object"},
-				spec.FieldSpec{Name: "birthDate", Type: "string", Format: "date"},
-				spec.FieldSpec{Name: "fines", Type: "array",
+			Fields: []*spec.FieldSpec{
+				&spec.FieldSpec{Name: "name", Type: "string"},
+				&spec.FieldSpec{Name: "age", Type: "number"},
+				&spec.FieldSpec{Name: "emptyHash", Type: "object"},
+				&spec.FieldSpec{Name: "birthDate", Type: "string", Format: "date"},
+				&spec.FieldSpec{Name: "fines", Type: "array",
 					Item: &spec.FieldSpec{
 						Type: "string",
 					},
 				},
-				spec.FieldSpec{Name: "emptyHashes", Type: "array",
+				&spec.FieldSpec{Name: "emptyHashes", Type: "array",
 					Item: &spec.FieldSpec{
 						Type: "object",
 					},
 				},
-				spec.FieldSpec{Name: "friends", Type: "array",
+				&spec.FieldSpec{Name: "friends", Type: "array",
 					Item: &spec.FieldSpec{
 						Type: "object",
-						Fields: []spec.FieldSpec{
-							spec.FieldSpec{
+						Fields: []*spec.FieldSpec{
+							&spec.FieldSpec{
 								Name: "name",
 								Type: "string",
 							},
-							spec.FieldSpec{
-								Name:   "birthDate",
-								Type:   "string",
-								Format: "date",
+							&spec.FieldSpec{
+								Name:     "birthDate",
+								Type:     "string",
+								Format:   "date",
+								Optional: true,
 							},
 						},
 					},
 				},
-				spec.FieldSpec{Name: "matrix", Type: "array",
+				&spec.FieldSpec{Name: "matrix", Type: "array",
 					Item: &spec.FieldSpec{
 						Type: "array",
 						Item: &spec.FieldSpec{
@@ -58,9 +59,9 @@ func TestSpecBuilder(t *testing.T) {
 						},
 					},
 				},
-				spec.FieldSpec{Name: "car", Type: "object",
-					Fields: []spec.FieldSpec{
-						spec.FieldSpec{Name: "brand", Type: "string"},
+				&spec.FieldSpec{Name: "car", Type: "object",
+					Fields: []*spec.FieldSpec{
+						&spec.FieldSpec{Name: "brand", Type: "string"},
 					},
 				},
 			},
@@ -73,8 +74,8 @@ func TestSpecBuilder(t *testing.T) {
 		Exchange: "/other-exchange",
 		Payload: spec.PayloadSpec{
 			Type: "object",
-			Fields: []spec.FieldSpec{
-				spec.FieldSpec{Name: "uuid", Type: "string"},
+			Fields: []*spec.FieldSpec{
+				&spec.FieldSpec{Name: "uuid", Type: "string"},
 			},
 		},
 	}
@@ -118,7 +119,7 @@ func TestSpecBuilder(t *testing.T) {
 							"friends": Property{Type: "array", Item: &Property{
 								Type: "object",
 								Properties: map[string]Property{
-									"birthDate": Property{Type: "string", Format: "date"},
+									"birthDate": Property{Type: "string", Format: "date", Optional: true},
 									"name":      Property{Type: "string"},
 								},
 							}},
@@ -226,7 +227,8 @@ func TestSpecBuilder(t *testing.T) {
 									"properties": {
 										"birthDate": {
 											"type": "string",
-											"format": "date"
+											"format": "date",
+											"x-optional": true
 										},
 										"name": {
 											"type": "string"

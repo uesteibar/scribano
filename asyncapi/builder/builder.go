@@ -12,6 +12,7 @@ type Property struct {
 	Format     string              `json:"format,omitempty"`
 	Properties map[string]Property `json:"properties,omitempty"`
 	Item       *Property           `json:"items,omitempty"`
+	Optional   bool                `json:"x-optional,omitempty"`
 }
 
 type Payload struct {
@@ -63,11 +64,11 @@ func buildArrayItem(f *spec.FieldSpec) *Property {
 	return p
 }
 
-func buildProperties(fields []spec.FieldSpec) map[string]Property {
+func buildProperties(fields []*spec.FieldSpec) map[string]Property {
 	properties := make(map[string]Property)
 
 	for _, f := range fields {
-		p := Property{Type: f.Type, Format: f.Format}
+		p := Property{Type: f.Type, Format: f.Format, Optional: f.Optional}
 		if f.Type == "object" {
 			p.Properties = buildProperties(f.Fields)
 		} else if f.Type == "array" {

@@ -52,24 +52,24 @@ func TestEndToEnd(t *testing.T) {
 
 	time.Sleep(time.Millisecond * 1000)
 
-	expectedFields := []spec.FieldSpec{
-		spec.FieldSpec{Name: "name", Type: "string"},
-		spec.FieldSpec{Name: "age", Type: "integer"},
-		spec.FieldSpec{Name: "canDrive", Type: "boolean"},
-		spec.FieldSpec{Name: "birthDate", Type: "string", Format: "date"},
-		spec.FieldSpec{Name: "friends", Type: "array",
+	expectedFields := []*spec.FieldSpec{
+		&spec.FieldSpec{Name: "name", Type: "string"},
+		&spec.FieldSpec{Name: "age", Type: "integer"},
+		&spec.FieldSpec{Name: "canDrive", Type: "boolean"},
+		&spec.FieldSpec{Name: "birthDate", Type: "string", Format: "date"},
+		&spec.FieldSpec{Name: "friends", Type: "array",
 			Item: &spec.FieldSpec{
 				Type: "object",
-				Fields: []spec.FieldSpec{
-					spec.FieldSpec{Name: "name", Type: "string"},
+				Fields: []*spec.FieldSpec{
+					&spec.FieldSpec{Name: "name", Type: "string"},
 				},
 			},
 		},
-		spec.FieldSpec{
+		&spec.FieldSpec{
 			Name: "car",
 			Type: "object",
-			Fields: []spec.FieldSpec{
-				spec.FieldSpec{Name: "brand", Type: "string"},
+			Fields: []*spec.FieldSpec{
+				&spec.FieldSpec{Name: "brand", Type: "string"},
 			},
 		},
 	}

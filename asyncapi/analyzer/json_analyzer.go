@@ -41,8 +41,8 @@ func (a JSONAnalyzer) GetPayloadSpec(payload []byte) (spec.PayloadSpec, error) {
 	return spec.PayloadSpec{Fields: fields, Type: objectType}, nil
 }
 
-func fieldsFor(raw map[string]interface{}) []spec.FieldSpec {
-	var fields []spec.FieldSpec
+func fieldsFor(raw map[string]interface{}) []*spec.FieldSpec {
+	var fields []*spec.FieldSpec
 	for k, v := range raw {
 		fields = append(fields, fieldFor(k, v))
 	}
@@ -110,14 +110,14 @@ func arrayItemFor(l []interface{}) *spec.FieldSpec {
 	return a
 }
 
-func fieldFor(k string, v interface{}) spec.FieldSpec {
+func fieldFor(k string, v interface{}) *spec.FieldSpec {
 	switch v.(type) {
 	case []interface{}:
-		return spec.FieldSpec{Name: k, Type: arrayType, Item: arrayItemFor(v.([]interface{}))}
+		return &spec.FieldSpec{Name: k, Type: arrayType, Item: arrayItemFor(v.([]interface{}))}
 	case map[string]interface{}:
-		return spec.FieldSpec{Name: k, Type: objectType, Fields: fieldsFor(v.(map[string]interface{}))}
+		return &spec.FieldSpec{Name: k, Type: objectType, Fields: fieldsFor(v.(map[string]interface{}))}
 	default:
 		t, f := typeAndFormatFor(v)
-		return spec.FieldSpec{Name: k, Type: t, Format: f}
+		return &spec.FieldSpec{Name: k, Type: t, Format: f}
 	}
 }

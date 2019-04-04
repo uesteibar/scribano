@@ -18,46 +18,24 @@ func TestRepo(t *testing.T) {
 		Topic: topic,
 		Payload: spec.PayloadSpec{
 			Type: "object",
-			Fields: []spec.FieldSpec{
-				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "float"},
-				spec.FieldSpec{
-					Name: "emptyHash",
-					Type: "object",
-				},
-				spec.FieldSpec{
-					Name: "fines",
-					Type: "array",
-					Item: &spec.FieldSpec{
-						Type: "string",
-					},
-				},
-				spec.FieldSpec{
-					Name: "emptyHashes",
-					Type: "array",
-					Item: &spec.FieldSpec{
-						Type: "object",
-					},
-				},
-				spec.FieldSpec{
+			Fields: []*spec.FieldSpec{
+				&spec.FieldSpec{Name: "name", Type: "string"},
+				&spec.FieldSpec{Name: "age", Type: "float"},
+				&spec.FieldSpec{Name: "emptyHash", Type: "object"},
+				&spec.FieldSpec{Name: "fines", Type: "array", Item: &spec.FieldSpec{Type: "string"}},
+				&spec.FieldSpec{Name: "emptyHashes", Type: "array", Item: &spec.FieldSpec{Type: "object"}},
+				&spec.FieldSpec{
 					Name: "friends",
 					Type: "array",
 					Item: &spec.FieldSpec{
-						Type: "object",
-						Fields: []spec.FieldSpec{
-							spec.FieldSpec{
-								Name: "name",
-								Type: "string",
-							},
-						},
+						Type:   "object",
+						Fields: []*spec.FieldSpec{&spec.FieldSpec{Name: "name", Type: "string"}},
 					},
 				},
-				spec.FieldSpec{
-					Name: "car",
-					Type: "object",
-					Fields: []spec.FieldSpec{
-						spec.FieldSpec{Name: "brand", Type: "string"},
-					},
+				&spec.FieldSpec{
+					Name:   "car",
+					Type:   "object",
+					Fields: []*spec.FieldSpec{&spec.FieldSpec{Name: "brand", Type: "string"}},
 				},
 			},
 		},
@@ -83,9 +61,9 @@ func TestRepo(t *testing.T) {
 
 	newPayload := spec.PayloadSpec{
 		Type: "object",
-		Fields: []spec.FieldSpec{
-			spec.FieldSpec{Name: "name", Type: "string"},
-			spec.FieldSpec{Name: "age", Type: "number"},
+		Fields: []*spec.FieldSpec{
+			&spec.FieldSpec{Name: "name", Type: "string"},
+			&spec.FieldSpec{Name: "age", Type: "number"},
 		},
 	}
 	m.Payload = newPayload
@@ -104,7 +82,7 @@ func TestFindAll(t *testing.T) {
 		Topic: uuid.New().String(),
 		Payload: spec.PayloadSpec{
 			Type:   "object",
-			Fields: []spec.FieldSpec{},
+			Fields: []*spec.FieldSpec{},
 		},
 	}
 	repo.Create(msg1)
@@ -113,7 +91,7 @@ func TestFindAll(t *testing.T) {
 		Topic: uuid.New().String(),
 		Payload: spec.PayloadSpec{
 			Type:   "object",
-			Fields: []spec.FieldSpec{},
+			Fields: []*spec.FieldSpec{},
 		},
 	}
 	repo.Create(msg2)
@@ -133,7 +111,7 @@ func TestFindByExchange(t *testing.T) {
 		Exchange: "correct",
 		Payload: spec.PayloadSpec{
 			Type:   "object",
-			Fields: []spec.FieldSpec{},
+			Fields: []*spec.FieldSpec{},
 		},
 	}
 	repo.Create(msg1)
@@ -143,7 +121,7 @@ func TestFindByExchange(t *testing.T) {
 		Exchange: "other",
 		Payload: spec.PayloadSpec{
 			Type:   "object",
-			Fields: []spec.FieldSpec{},
+			Fields: []*spec.FieldSpec{},
 		},
 	}
 	repo.Create(msg2)

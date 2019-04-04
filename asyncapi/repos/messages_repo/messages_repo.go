@@ -27,7 +27,7 @@ type ErrNotFound struct {
 func NewErrNotFound() *ErrNotFound {
 	return &ErrNotFound{}
 }
-func (e *ErrNotFound) Error() string {
+func (e ErrNotFound) Error() string {
 	return "NOT_FOUND"
 }
 

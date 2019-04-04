@@ -27,45 +27,35 @@ func TestPersist(t *testing.T) {
 		Exchange: "/test-exchange",
 		Payload: spec.PayloadSpec{
 			Type: "object",
-			Fields: []spec.FieldSpec{
-				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "number"},
-				spec.FieldSpec{
-					Name: "emptyHash",
-					Type: "object",
-				},
-				spec.FieldSpec{
+			Fields: []*spec.FieldSpec{
+				&spec.FieldSpec{Name: "name", Type: "string"},
+				&spec.FieldSpec{Name: "age", Type: "number"},
+				&spec.FieldSpec{Name: "emptyHash", Type: "object"},
+				&spec.FieldSpec{
 					Name: "fines",
 					Type: "array",
-					Item: &spec.FieldSpec{
-						Type: "string",
-					},
+					Item: &spec.FieldSpec{Type: "string"},
 				},
-				spec.FieldSpec{
+				&spec.FieldSpec{
 					Name: "emptyHashes",
 					Type: "array",
-					Item: &spec.FieldSpec{
-						Type: "object",
-					},
+					Item: &spec.FieldSpec{Type: "object"},
 				},
-				spec.FieldSpec{
+				&spec.FieldSpec{
 					Name: "friends",
 					Type: "array",
 					Item: &spec.FieldSpec{
 						Type: "object",
-						Fields: []spec.FieldSpec{
-							spec.FieldSpec{
-								Name: "name",
-								Type: "string",
-							},
+						Fields: []*spec.FieldSpec{
+							&spec.FieldSpec{Name: "name", Type: "string"},
 						},
 					},
 				},
-				spec.FieldSpec{
+				&spec.FieldSpec{
 					Name: "car",
 					Type: "object",
-					Fields: []spec.FieldSpec{
-						spec.FieldSpec{Name: "brand", Type: "string"},
+					Fields: []*spec.FieldSpec{
+						&spec.FieldSpec{Name: "brand", Type: "string"},
 					},
 				},
 			},
@@ -87,14 +77,14 @@ func TestPersist(t *testing.T) {
 		Exchange: "/test-exchange",
 		Payload: spec.PayloadSpec{
 			Type: "object",
-			Fields: []spec.FieldSpec{
-				spec.FieldSpec{Name: "name", Type: "string"},
-				spec.FieldSpec{Name: "age", Type: "string"},
-				spec.FieldSpec{
+			Fields: []*spec.FieldSpec{
+				&spec.FieldSpec{Name: "name", Type: "string"},
+				&spec.FieldSpec{Name: "age", Type: "string"},
+				&spec.FieldSpec{
 					Name: "car",
 					Type: "object",
-					Fields: []spec.FieldSpec{
-						spec.FieldSpec{Name: "brand", Type: "string"},
+					Fields: []*spec.FieldSpec{
+						&spec.FieldSpec{Name: "brand", Type: "string"},
 					},
 				},
 			},
