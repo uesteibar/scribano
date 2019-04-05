@@ -119,7 +119,7 @@ func TestSpecBuilder(t *testing.T) {
 							"friends": Property{Type: "array", Item: &Property{
 								Type: "object",
 								Properties: map[string]Property{
-									"birthDate": Property{Type: "string", Format: "date", Optional: true},
+									"birthDate": Property{Type: "string", Format: "date", Optional: true, Description: "Optional field"},
 									"name":      Property{Type: "string"},
 								},
 							}},
@@ -155,98 +155,99 @@ func TestSpecBuilder(t *testing.T) {
 	json, _ := json.Marshal(res)
 
 	expectedJSON := `{
-		"asyncapi": "1.0.0",
-		"info": {
-			"title": "",
-			"version": ""
+		"asyncapi":"1.0.0",
+		"info":{
+			"title":"",
+			"version":""
 		},
-		"topics": {
-			"other.topic": {
-				"publish": {
-				  "$ref": "#/components/messages/OtherTopic"
+		"topics":{
+			"other.topic":{
+				"publish":{
+					"$ref":"#/components/messages/OtherTopic"
 				},
-				"x-exchange": "/other-exchange"
+				"x-exchange":"/other-exchange"
 			},
-			"some.topic": {
-				"publish": {
-				  "$ref": "#/components/messages/SomeTopic"
+			"some.topic":{
+				"publish":{
+					"$ref":"#/components/messages/SomeTopic"
 				},
-				"x-exchange": "/some-exchange"
+				"x-exchange":"/some-exchange"
 			}
 		},
-		"components": {
-			"messages": {
-				"OtherTopic": {
-					"payload": {
+		"components":{
+			"messages":{
+				"OtherTopic":{
+					"payload":{
 						"type":"object",
-						"properties": {
-							"uuid": {
-								"type": "string"
+						"properties":{
+							"uuid":{
+								"type":"string"
 							}
 						}
 					}
 				},
-				"SomeTopic": {
-					"payload": {
+				"SomeTopic":{
+					"payload":{
 						"type":"object",
-						"properties": {
-							"age": {
-								"type": "number"
+						"properties":{
+							"age":{
+								"type":"number"
 							},
-							"birthDate": {
-								"type": "string",
-								"format": "date"
+							"birthDate":{
+								"type":"string",
+								"format":"date"
 							},
-							"car": {
-								"type": "object",
-								"properties": {
-									"brand": {
-										"type": "string"
+							"car":{
+								"type":"object",
+								"properties":{
+									"brand":{
+										"type":"string"
 									}
 								}
 							},
-							"emptyHash": {
-								"type": "object"
+							"emptyHash":{
+								"type":"object"
 							},
-							"emptyHashes": {
-								"type": "array",
-								"items": {
-									"type": "object"
+							"emptyHashes":{
+								"type":"array",
+								"items":{
+									"type":"object"
 								}
 							},
-							"fines": {
-								"type": "array",
-								"items": {
-									"type": "string"
+							"fines":{
+								"type":"array",
+								"items":{
+									"type":"string"
 								}
 							},
-							"friends": {
-								"type": "array",
-								"items": {
-									"type": "object",
-									"properties": {
-										"birthDate": {
-											"type": "string",
-											"format": "date",
-											"x-optional": true
+							"friends":{
+								"type":"array",
+								"items":{
+									"type":"object",
+									"properties":{
+										"birthDate":{
+											"type":"string",
+											"format":"date",
+											"description":"Optional field",
+											"x-optional":true
 										},
-										"name": {
-											"type": "string"
+										"name":{
+											"type":"string"
 										}
 									}
 								}
 							},
-							"matrix": {
-								"type": "array",
-								"items": {
-									"type": "array",
-									"items": {
-										"type": "integer"
+							"matrix":{
+								"type":"array",
+								"items":{
+									"type":"array",
+									"items":{
+										"type":"integer"
 									}
 								}
 							},
-							"name": {
-								"type": "string"
+							"name":{
+								"type":"string"
 							}
 						}
 					}
@@ -257,7 +258,6 @@ func TestSpecBuilder(t *testing.T) {
 
 	expectedJSON = strings.Replace(expectedJSON, "\n", "", -1)
 	expectedJSON = strings.Replace(expectedJSON, "\t", "", -1)
-	expectedJSON = strings.Replace(expectedJSON, " ", "", -1)
 
 	assert.Equal(t, expectedJSON, string(json))
 }
