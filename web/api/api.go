@@ -59,12 +59,17 @@ func handleAsyncAPIForExchange(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleHealth(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("OK"))
+}
+
 // Start the api server
 func Start() {
 	r := chi.NewRouter()
 	r.Get("/asyncapi", handleAsyncAPI)
 	r.Get("/asyncapi/", handleAsyncAPI)
 	r.Get("/asyncapi/{exchange}", handleAsyncAPIForExchange)
+	r.Get("/system/health", handleHealth)
 
 	log.Printf("Running api on http://localhost:5000")
 	http.ListenAndServe(":5000", r)
