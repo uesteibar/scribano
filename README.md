@@ -1,5 +1,7 @@
 # Scribano
 
+[![CircleCI](https://circleci.com/gh/uesteibar/scribano/tree/master.svg?style=svg)](https://circleci.com/gh/uesteibar/scribano/tree/master)
+
 Builds an [asyncapi](https://www.asyncapi.com/) documentation for your microservices
 communicating through [rabbitmq](https://www.rabbitmq.com/).
 

@@ -1,0 +1,14 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.12-stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build the image
+          command: docker-compose -f ./ci/compose.yml build
+      - run:
+          name: Run tests
+          command: docker-compose -f ./ci/compose.yml run main
