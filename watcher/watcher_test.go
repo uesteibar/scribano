@@ -1,6 +1,7 @@
 package watcher
 
 import (
+	"os"
 	"testing"
 	"time"
 
@@ -12,17 +13,18 @@ import (
 	"github.com/uesteibar/scribano/storage/db"
 )
 
-const AMQPHost = "amqp://guest:guest@localhost"
-const Exchange = "/other-exchange"
+func amqpHost() string {
+	return os.Getenv("RABBIT_URL")
+}
 
-func produce(topic, body string) {
-	conn, _ := amqp.Dial(AMQPHost)
+func produce(exchange, topic, body string) {
+	conn, _ := amqp.Dial(amqpHost())
 	defer conn.Close()
 	ch, _ := conn.Channel()
 	defer ch.Close()
-	_ = ch.ExchangeDeclare(Exchange, "topic", true, false, false, false, nil)
+	_ = ch.ExchangeDeclare(exchange, "topic", true, false, false, false, nil)
 	p := amqp.Publishing{ContentType: "application/json", Body: []byte(body)}
-	_ = ch.Publish(Exchange, topic, false, false, p)
+	_ = ch.Publish(exchange, topic, false, false, p)
 }
 
 func TestEndToEnd(t *testing.T) {
@@ -44,13 +46,14 @@ func TestEndToEnd(t *testing.T) {
 		}
 	`
 	topic := uuid.New().String()
-	topic = "key.test"
-	produce(topic, body)
+	exchange := uuid.New().String()
 
-	watcher := New(Config{Host: AMQPHost, RoutingKey: "#", Exchange: Exchange, ExchangeType: "topic"})
+	watcher := New(Config{Host: amqpHost(), RoutingKey: "#", Exchange: exchange, ExchangeType: "topic"})
 	go watcher.Watch()
 
-	time.Sleep(time.Millisecond * 1000)
+	time.Sleep(time.Second)
+	produce(exchange, topic, body)
+	time.Sleep(time.Second)
 
 	expectedFields := []*spec.FieldSpec{
 		&spec.FieldSpec{Name: "name", Type: "string"},
@@ -77,7 +80,7 @@ func TestEndToEnd(t *testing.T) {
 	m, err := repo.Find(topic)
 	assert.Nil(t, err)
 	assert.Equal(t, topic, m.Topic)
-	assert.Equal(t, Exchange, m.Exchange)
+	assert.Equal(t, exchange, m.Exchange)
 	assert.Equal(t, "object", m.Payload.Type)
 	assert.ElementsMatch(t, expectedFields, m.Payload.Fields)
 }

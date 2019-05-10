@@ -1,0 +1,38 @@
+---
+version: '3'
+services:
+  main:
+    build:
+      context: ../
+      dockerfile: ci/Dockerfile
+    command: go test ./...
+    depends_on:
+      - pg
+      - rabbit
+    environment:
+      - PG_URL=postgresql://postgres:postgres@pg:5432/asyncapi_test?sslmode=disable
+      - RABBIT_URL=amqp://guest:guest@rabbit
+    networks:
+      - default
+  pg:
+    image: postgres
+    volumes:
+      - 'pg:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_DB=asyncapi_test
+    networks:
+      - default
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq
+    command: "rabbitmq-server"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "node_health_check"]
+    networks:
+      - default
+
+volumes:
+  pg:
+
+networks:
+  default:

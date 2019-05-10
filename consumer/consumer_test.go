@@ -1,17 +1,21 @@
 package consumer
 
 import (
+	"os"
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/streadway/amqp"
 	"github.com/stretchr/testify/assert"
 )
 
-const AMQPHost = "amqp://guest:guest@localhost"
+func amqpHost() string {
+	return os.Getenv("RABBIT_URL")
+}
 
 func produce(topic, exchange, exchangeType, body string) {
-	conn, _ := amqp.Dial(AMQPHost)
+	conn, _ := amqp.Dial(amqpHost())
 	defer conn.Close()
 	ch, _ := conn.Channel()
 	defer ch.Close()
@@ -21,20 +25,22 @@ func produce(topic, exchange, exchangeType, body string) {
 }
 
 func TestConsumer_Topic(t *testing.T) {
-	topic := "test.key"
-	exchange := "/topic-exchange"
+	topic := uuid.New().String()
+	exchange := uuid.New().String()
+
 	ch := make(chan Message)
 	c := Consumer{
-		Host:         AMQPHost,
+		Host:         amqpHost(),
 		RoutingKey:   topic,
 		Exchange:     exchange,
 		ExchangeType: "topic",
 		Ch:           ch,
 	}
 
-	produce(topic, exchange, "topic", "Testing world")
-
 	go c.Consume()
+
+	time.Sleep(time.Second)
+	produce(topic, exchange, "topic", "Testing world")
 
 	select {
 	case msg, _ := <-ch:
@@ -48,20 +54,21 @@ func TestConsumer_Topic(t *testing.T) {
 }
 
 func TestConsumer_Direct(t *testing.T) {
-	topic := "test.key"
-	exchange := "/direct-exchange"
+	topic := uuid.New().String()
+	exchange := uuid.New().String()
 	ch := make(chan Message)
 	c := Consumer{
-		Host:         AMQPHost,
+		Host:         amqpHost(),
 		RoutingKey:   topic,
 		Exchange:     exchange,
 		ExchangeType: "direct",
 		Ch:           ch,
 	}
 
-	produce(topic, exchange, "direct", "Testing direct")
-
 	go c.Consume()
+
+	time.Sleep(time.Second)
+	produce(topic, exchange, "direct", "Testing direct")
 
 	select {
 	case msg, _ := <-ch:
@@ -75,18 +82,19 @@ func TestConsumer_Direct(t *testing.T) {
 }
 
 func TestConsumer_Fanout(t *testing.T) {
-	exchange := "/fanout-exchange"
+	exchange := uuid.New().String()
 	ch := make(chan Message)
 	c := Consumer{
-		Host:         AMQPHost,
+		Host:         amqpHost(),
 		Exchange:     exchange,
 		ExchangeType: "fanout",
 		Ch:           ch,
 	}
 
-	produce("any", exchange, "fanout", "Testing fanout")
-
 	go c.Consume()
+
+	time.Sleep(time.Second)
+	produce("any", exchange, "fanout", "Testing fanout")
 
 	select {
 	case msg, _ := <-ch:
