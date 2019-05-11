@@ -1,5 +1,7 @@
 # Scribano
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b5b934e0789c40389c5213e679ffef8a)](https://app.codacy.com/app/uesteibar/scribano?utm_source=github.com&utm_medium=referral&utm_content=uesteibar/scribano&utm_campaign=Badge_Grade_Dashboard)
+
 Builds an [asyncapi](https://www.asyncapi.com/) documentation for your microservices
 communicating through [rabbitmq](https://www.rabbitmq.com/).
 
