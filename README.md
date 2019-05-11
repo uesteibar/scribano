@@ -1,5 +1,6 @@
 # Scribano
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b5b934e0789c40389c5213e679ffef8a)](https://app.codacy.com/app/uesteibar/scribano?utm_source=github.com&utm_medium=referral&utm_content=uesteibar/scribano&utm_campaign=Badge_Grade_Dashboard)
 [![CircleCI](https://circleci.com/gh/uesteibar/scribano/tree/master.svg?style=svg)](https://circleci.com/gh/uesteibar/scribano/tree/master)
 
 Builds an [asyncapi](https://www.asyncapi.com/) documentation for your microservices
