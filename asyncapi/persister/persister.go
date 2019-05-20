@@ -4,22 +4,24 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/repos/messagesrepo"
 	"github.com/uesteibar/scribano/asyncapi/spec"
 	"github.com/uesteibar/scribano/storage/db"
 )
 
+// Persister persists analyzed messages and pipes the result through
 type Persister struct {
 	ChIn         <-chan spec.MessageSpec
 	ChOut        chan<- spec.MessageSpec
-	messagesRepo *messages_repo.MessagesRepo
+	messagesRepo *messagesrepo.MessagesRepo
 }
 
+// New creates a new Persister
 func New(chIn <-chan spec.MessageSpec, chOut chan<- spec.MessageSpec, database db.Database) *Persister {
 	return &Persister{
 		ChIn:         chIn,
 		ChOut:        chOut,
-		messagesRepo: messages_repo.New(database),
+		messagesRepo: messagesrepo.New(database),
 	}
 }
 
@@ -27,7 +29,7 @@ func isDifferent(msg, newMsg spec.MessageSpec) bool {
 	return !reflect.DeepEqual(msg, newMsg)
 }
 
-func (p *Persister) Persist(msg spec.MessageSpec) error {
+func (p *Persister) persist(msg spec.MessageSpec) error {
 	ms, err := p.messagesRepo.Find(msg.Topic)
 
 	if err == nil {
@@ -41,9 +43,10 @@ func (p *Persister) Persist(msg spec.MessageSpec) error {
 	return err
 }
 
+// Watch for incoming messages and persist them
 func (p *Persister) Watch() {
 	for msg := range p.ChIn {
-		if err := p.Persist(msg); err != nil {
+		if err := p.persist(msg); err != nil {
 			log.Printf("ERROR %s", err)
 		} else {
 			p.ChOut <- msg

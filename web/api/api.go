@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/uesteibar/scribano/asyncapi/builder"
-	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/repos/messagesrepo"
 	"github.com/uesteibar/scribano/asyncapi/spec"
 	"github.com/uesteibar/scribano/storage/db"
 )
@@ -28,7 +28,7 @@ func buildSpec(msgSpecs []spec.MessageSpec, exchange string) builder.AsyncAPISpe
 }
 
 func handleAsyncAPI(w http.ResponseWriter, r *http.Request) {
-	repo := messages_repo.New(db.DB{})
+	repo := messagesrepo.New(db.DB{})
 
 	if msgSpecs, err := repo.FindAll(); err == nil {
 		spec := buildSpec(msgSpecs, "")
@@ -41,7 +41,7 @@ func handleAsyncAPI(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleAsyncAPIForExchange(w http.ResponseWriter, r *http.Request) {
-	repo := messages_repo.New(db.DB{})
+	repo := messagesrepo.New(db.DB{})
 	exchange := chi.URLParam(r, "exchange")
 
 	if exchange == "" {

@@ -6,14 +6,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/repos/messagesrepo"
 	"github.com/uesteibar/scribano/asyncapi/spec"
 	"github.com/uesteibar/scribano/storage/db"
 )
 
 func TestPersist(t *testing.T) {
 	database := db.GetUniqueDB()
-	repo := messages_repo.New(database)
+	repo := messagesrepo.New(database)
 	repo.Migrate()
 	chIn := make(chan spec.MessageSpec)
 	chOut := make(chan spec.MessageSpec)

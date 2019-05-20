@@ -7,55 +7,57 @@ import (
 	"github.com/uesteibar/scribano/asyncapi/spec"
 )
 
-type Property struct {
+type property struct {
 	Type        string              `json:"type"`
 	Format      string              `json:"format,omitempty"`
 	Description string              `json:"description,omitempty"`
-	Properties  map[string]Property `json:"properties,omitempty"`
-	Item        *Property           `json:"items,omitempty"`
+	Properties  map[string]property `json:"properties,omitempty"`
+	Item        *property           `json:"items,omitempty"`
 	Optional    bool                `json:"x-optional,omitempty"`
 }
 
-type Payload struct {
+type payload struct {
 	Type       string              `json:"type"`
-	Properties map[string]Property `json:"properties"`
+	Properties map[string]property `json:"properties"`
 }
 
-type Message struct {
-	Payload Payload `json:"payload"`
+type message struct {
+	Payload payload `json:"payload"`
 }
 
-type Components struct {
-	Messages map[string]Message `json:"messages"`
+type components struct {
+	Messages map[string]message `json:"messages"`
 }
 
-type Ref struct {
+type ref struct {
 	RefKey string `json:"$ref"`
 }
 
-type Topic struct {
-	Publish  Ref    `json:"publish"`
+type topic struct {
+	Publish  ref    `json:"publish"`
 	Exchange string `json:"x-exchange"`
 }
 
-type Info struct {
+type information struct {
 	Title   string `json:"title"`
 	Version string `json:"version"`
 }
 
+// AsyncAPISpec represent the asyncapi data structure
 type AsyncAPISpec struct {
 	AsyncAPI   string           `json:"asyncapi"`
-	Info       Info             `json:"info"`
-	Topics     map[string]Topic `json:"topics"`
-	Components Components       `json:"components"`
+	Info       information      `json:"info"`
+	Topics     map[string]topic `json:"topics"`
+	Components components       `json:"components"`
 }
 
+// SpecBuilder builds a spec using the builder pattern
 type SpecBuilder struct {
 	Spec AsyncAPISpec
 }
 
-func buildArrayItem(f *spec.FieldSpec) *Property {
-	p := &Property{Type: f.Type}
+func buildArrayItem(f *spec.FieldSpec) *property {
+	p := &property{Type: f.Type}
 	if f.Type == "object" {
 		p.Properties = buildProperties(f.Fields)
 	} else if f.Type == "array" {
@@ -67,11 +69,11 @@ func buildArrayItem(f *spec.FieldSpec) *Property {
 
 const optionalDescription = "Optional field"
 
-func buildProperties(fields []*spec.FieldSpec) map[string]Property {
-	properties := make(map[string]Property)
+func buildProperties(fields []*spec.FieldSpec) map[string]property {
+	properties := make(map[string]property)
 
 	for _, f := range fields {
-		p := Property{Type: f.Type, Format: f.Format, Optional: f.Optional}
+		p := property{Type: f.Type, Format: f.Format, Optional: f.Optional}
 		if p.Optional {
 			p.Description = optionalDescription
 		}
@@ -87,8 +89,8 @@ func buildProperties(fields []*spec.FieldSpec) map[string]Property {
 	return properties
 }
 
-func buildMsg(msg spec.MessageSpec) Message {
-	m := Message{Payload: Payload{Type: msg.Payload.Type}}
+func buildMsg(msg spec.MessageSpec) message {
+	m := message{Payload: payload{Type: msg.Payload.Type}}
 
 	m.Payload.Properties = buildProperties(msg.Payload.Fields)
 
@@ -106,39 +108,42 @@ func msgName(msg spec.MessageSpec) string {
 	return strings.Join(pieces, "")
 }
 
-func refFor(msg spec.MessageSpec) Ref {
-	return Ref{RefKey: fmt.Sprintf("#/components/messages/%s", msgName(msg))}
+func refFor(msg spec.MessageSpec) ref {
+	return ref{RefKey: fmt.Sprintf("#/components/messages/%s", msgName(msg))}
 }
 
+// AddMessage inserts the information for a message in the asyncapi spec
 func (b *SpecBuilder) AddMessage(msg spec.MessageSpec) *SpecBuilder {
 	if b.Spec.Topics == nil {
-		b.Spec.Topics = make(map[string]Topic)
+		b.Spec.Topics = make(map[string]topic)
 	}
-	b.Spec.Topics[msg.Topic] = Topic{Publish: refFor(msg), Exchange: msg.Exchange}
+	b.Spec.Topics[msg.Topic] = topic{Publish: refFor(msg), Exchange: msg.Exchange}
 
 	if b.Spec.Components.Messages == nil {
-		b.Spec.Components.Messages = make(map[string]Message)
+		b.Spec.Components.Messages = make(map[string]message)
 	}
 	b.Spec.Components.Messages[msgName(msg)] = buildMsg(msg)
 
 	return b
 }
 
-const asyncApiVersion = "1.0.0"
+const asyncAPIVersion = "1.0.0"
 
+// AddServerInfo adds the server information to the asyncapi spec
 func (b *SpecBuilder) AddServerInfo(info spec.ServerSpec) *SpecBuilder {
-	b.Spec.Info = Info{Title: info.Name, Version: info.Version}
-	b.Spec.AsyncAPI = asyncApiVersion
+	b.Spec.Info = information{Title: info.Name, Version: info.Version}
+	b.Spec.AsyncAPI = asyncAPIVersion
 
 	return b
 }
 
+// Build builds the final asyncapi spec
 func (b *SpecBuilder) Build() AsyncAPISpec {
 	if b.Spec.Topics == nil {
-		b.Spec.Topics = make(map[string]Topic)
+		b.Spec.Topics = make(map[string]topic)
 	}
 	if b.Spec.Components.Messages == nil {
-		b.Spec.Components.Messages = make(map[string]Message)
+		b.Spec.Components.Messages = make(map[string]message)
 	}
 
 	return b.Spec

@@ -1,4 +1,4 @@
-package messages_repo
+package messagesrepo
 
 import (
 	"testing"

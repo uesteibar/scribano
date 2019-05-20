@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/repos/messagesrepo"
 	"github.com/uesteibar/scribano/storage/db"
 	"github.com/uesteibar/scribano/watcher"
 	"github.com/uesteibar/scribano/watcher/config"
@@ -28,7 +28,7 @@ func getLoader() config.Loader {
 }
 
 func main() {
-	repo := messages_repo.New(db.DB{})
+	repo := messagesrepo.New(db.DB{})
 	repo.Migrate()
 
 	loader := getLoader()

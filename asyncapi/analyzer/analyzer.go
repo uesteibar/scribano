@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/repos/messagesrepo"
 	"github.com/uesteibar/scribano/asyncapi/spec"
 	"github.com/uesteibar/scribano/consumer"
 	"github.com/uesteibar/scribano/storage/db"
@@ -24,14 +24,15 @@ type PayloadAnalyzer interface {
 type Analyzer struct {
 	ChIn         chan consumer.Message
 	ChOut        chan spec.MessageSpec
-	messagesRepo *messages_repo.MessagesRepo
+	messagesRepo *messagesrepo.MessagesRepo
 }
 
+// New creates a new Analyzer
 func New(chIn chan consumer.Message, chOut chan spec.MessageSpec, database db.Database) *Analyzer {
 	return &Analyzer{
 		ChIn:         chIn,
 		ChOut:        chOut,
-		messagesRepo: messages_repo.New(database),
+		messagesRepo: messagesrepo.New(database),
 	}
 }
 
@@ -119,7 +120,7 @@ func merge(next *spec.MessageSpec, current spec.MessageSpec) {
 func (a *Analyzer) analyzeCompared(next *spec.MessageSpec) error {
 	current, err := a.messagesRepo.Find(next.Topic)
 	if err != nil {
-		_, isNotFound := err.(*messages_repo.ErrNotFound)
+		_, isNotFound := err.(*messagesrepo.ErrNotFound)
 		if isNotFound {
 			return nil
 		}

@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/streadway/amqp"
 	"github.com/stretchr/testify/assert"
-	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/repos/messagesrepo"
 	"github.com/uesteibar/scribano/asyncapi/spec"
 	"github.com/uesteibar/scribano/storage/db"
 )
@@ -28,7 +28,7 @@ func produce(exchange, topic, body string) {
 }
 
 func TestEndToEnd(t *testing.T) {
-	repo := messages_repo.New(db.DB{})
+	repo := messagesrepo.New(db.DB{})
 	repo.Migrate()
 	body := `
 		{

@@ -85,64 +85,64 @@ func TestSpecBuilder(t *testing.T) {
 
 	expected := AsyncAPISpec{
 		AsyncAPI: "1.0.0",
-		Info: Info{
+		Info: information{
 			Title:   "",
 			Version: "",
 		},
-		Topics: map[string]Topic{
-			"some.topic": Topic{
-				Publish:  Ref{RefKey: "#/components/messages/SomeTopic"},
+		Topics: map[string]topic{
+			"some.topic": topic{
+				Publish:  ref{RefKey: "#/components/messages/SomeTopic"},
 				Exchange: "/some-exchange",
 			},
-			"other.topic": Topic{
-				Publish:  Ref{RefKey: "#/components/messages/OtherTopic"},
+			"other.topic": topic{
+				Publish:  ref{RefKey: "#/components/messages/OtherTopic"},
 				Exchange: "/other-exchange",
 			},
 		},
-		Components: Components{
-			Messages: map[string]Message{
-				"SomeTopic": Message{
-					Payload: Payload{
+		Components: components{
+			Messages: map[string]message{
+				"SomeTopic": message{
+					Payload: payload{
 						Type: "object",
-						Properties: map[string]Property{
-							"name":      Property{Type: "string"},
-							"age":       Property{Type: "number"},
-							"birthDate": Property{Type: "string", Format: "date"},
-							"emptyHash": Property{Type: "object", Properties: map[string]Property{}},
-							"fines": Property{Type: "array", Item: &Property{
+						Properties: map[string]property{
+							"name":      property{Type: "string"},
+							"age":       property{Type: "number"},
+							"birthDate": property{Type: "string", Format: "date"},
+							"emptyHash": property{Type: "object", Properties: map[string]property{}},
+							"fines": property{Type: "array", Item: &property{
 								Type: "string",
 							}},
-							"emptyHashes": Property{Type: "array", Item: &Property{
+							"emptyHashes": property{Type: "array", Item: &property{
 								Type:       "object",
-								Properties: map[string]Property{},
+								Properties: map[string]property{},
 							}},
-							"friends": Property{Type: "array", Item: &Property{
+							"friends": property{Type: "array", Item: &property{
 								Type: "object",
-								Properties: map[string]Property{
-									"birthDate": Property{Type: "string", Format: "date", Optional: true, Description: "Optional field"},
-									"name":      Property{Type: "string"},
+								Properties: map[string]property{
+									"birthDate": property{Type: "string", Format: "date", Optional: true, Description: "Optional field"},
+									"name":      property{Type: "string"},
 								},
 							}},
-							"matrix": Property{Type: "array", Item: &Property{
+							"matrix": property{Type: "array", Item: &property{
 								Type: "array",
-								Item: &Property{
+								Item: &property{
 									Type: "integer",
 								},
 							}},
-							"car": Property{
+							"car": property{
 								Type: "object",
-								Properties: map[string]Property{
-									"brand": Property{Type: "string"},
+								Properties: map[string]property{
+									"brand": property{Type: "string"},
 								},
 							},
 						},
 					},
 				},
-				"OtherTopic": Message{
-					Payload: Payload{
+				"OtherTopic": message{
+					Payload: payload{
 						Type: "object",
-						Properties: map[string]Property{
-							"uuid": Property{Type: "string"},
+						Properties: map[string]property{
+							"uuid": property{Type: "string"},
 						},
 					},
 				},
@@ -271,13 +271,13 @@ func TestSpecBuilder_NoMessages(t *testing.T) {
 
 	expected := AsyncAPISpec{
 		AsyncAPI: "1.0.0",
-		Info: Info{
+		Info: information{
 			Title:   "",
 			Version: "",
 		},
-		Topics: map[string]Topic{},
-		Components: Components{
-			Messages: map[string]Message{},
+		Topics: map[string]topic{},
+		Components: components{
+			Messages: map[string]message{},
 		},
 	}
 

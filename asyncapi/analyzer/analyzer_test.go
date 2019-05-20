@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/uesteibar/scribano/asyncapi/repos/messages_repo"
+	"github.com/uesteibar/scribano/asyncapi/repos/messagesrepo"
 	"github.com/uesteibar/scribano/asyncapi/spec"
 	"github.com/uesteibar/scribano/consumer"
 	"github.com/uesteibar/scribano/storage/db"
@@ -15,7 +15,7 @@ func treatTypeAsJSON(t *testing.T, contentType string) {
 	chIn := make(chan consumer.Message)
 	chOut := make(chan spec.MessageSpec)
 	database := db.GetUniqueDB()
-	repo := messages_repo.New(database)
+	repo := messagesrepo.New(database)
 	repo.Migrate()
 
 	a := New(chIn, chOut, database)
@@ -157,7 +157,7 @@ func TestAnalyze_JSON_InvalidContent(t *testing.T) {
 	chIn := make(chan consumer.Message)
 	chOut := make(chan spec.MessageSpec)
 	database := db.GetUniqueDB()
-	repo := messages_repo.New(database)
+	repo := messagesrepo.New(database)
 	repo.Migrate()
 
 	a := New(chIn, chOut, database)
@@ -181,7 +181,7 @@ func TestAnalyze_UnknownFormat(t *testing.T) {
 	chIn := make(chan consumer.Message)
 	chOut := make(chan spec.MessageSpec)
 	database := db.GetUniqueDB()
-	repo := messages_repo.New(database)
+	repo := messagesrepo.New(database)
 	repo.Migrate()
 
 	a := New(chIn, chOut, database)
@@ -205,7 +205,7 @@ func TestAnalyze_ChangingShape(t *testing.T) {
 	chIn := make(chan consumer.Message)
 	chOut := make(chan spec.MessageSpec)
 	database := db.GetUniqueDB()
-	repo := messages_repo.New(database)
+	repo := messagesrepo.New(database)
 	repo.Migrate()
 
 	repo.Create(spec.MessageSpec{

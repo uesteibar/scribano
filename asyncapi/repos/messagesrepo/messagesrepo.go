@@ -1,78 +1,87 @@
-package messages_repo
+package messagesrepo
 
 import (
 	"encoding/json"
 
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/sqlite" // required by the library
 	"github.com/uesteibar/scribano/asyncapi/spec"
 	"github.com/uesteibar/scribano/storage/db"
 )
 
 const gormNotFound = "record not found"
 
-type MessageSpec struct {
+type messageSpec struct {
 	Topic    string `gorm:"primary_key"`
 	Exchange string
 	Payload  []byte
 }
 
+// MessagesRepo is the repo for storing messages
 type MessagesRepo struct {
 	db db.Database
 }
 
+// ErrNotFound is returned when a message is not found
 type ErrNotFound struct {
 	message string
 }
 
+// NewErrNotFound returns a not found error
 func NewErrNotFound() *ErrNotFound {
 	return &ErrNotFound{}
 }
+
 func (e ErrNotFound) Error() string {
 	return "NOT_FOUND"
 }
 
+// New creates a new messages repo
 func New(db db.Database) *MessagesRepo {
 	return &MessagesRepo{db: db}
 }
 
+// Migrate runs migrations for the messages repo
 func (r *MessagesRepo) Migrate() {
 	conn := r.db.Open()
-	conn.AutoMigrate(&MessageSpec{})
+	conn.AutoMigrate(&messageSpec{})
 }
 
-func transformMsg(msg spec.MessageSpec) (MessageSpec, error) {
+func transformMsg(msg spec.MessageSpec) (messageSpec, error) {
 	payload, err := json.Marshal(msg.Payload)
 
 	if err != nil {
-		return MessageSpec{}, err
+		return messageSpec{}, err
 	}
 
-	return MessageSpec{Topic: msg.Topic, Exchange: msg.Exchange, Payload: payload}, nil
+	return messageSpec{Topic: msg.Topic, Exchange: msg.Exchange, Payload: payload}, nil
 }
 
-func transformToMsg(msg MessageSpec) spec.MessageSpec {
+func transformToMsg(msg messageSpec) spec.MessageSpec {
 	var p spec.PayloadSpec
 	json.Unmarshal(msg.Payload, &p)
 
 	return spec.MessageSpec{Topic: msg.Topic, Exchange: msg.Exchange, Payload: p}
 }
 
+// Create a message spec
 func (r *MessagesRepo) Create(msg spec.MessageSpec) error {
 	conn := r.db.Open()
 	defer conn.Close()
 
-	if m, err := transformMsg(msg); err != nil {
+	m, err := transformMsg(msg)
+	if err != nil {
 		return err
-	} else {
-		return conn.Create(&m).Error
 	}
+
+	return conn.Create(&m).Error
 }
 
+// Find a message spec by topic
 func (r *MessagesRepo) Find(topic string) (spec.MessageSpec, error) {
 	conn := r.db.Open()
 	defer conn.Close()
 
-	var m MessageSpec
+	var m messageSpec
 	if err := conn.First(&m, "topic = ?", topic).Error; err == nil {
 		var p spec.PayloadSpec
 		json.Unmarshal(m.Payload, &p)
@@ -87,50 +96,57 @@ func (r *MessagesRepo) Find(topic string) (spec.MessageSpec, error) {
 	}
 }
 
+// FindAll returns all messages
 func (r *MessagesRepo) FindAll() ([]spec.MessageSpec, error) {
 	conn := r.db.Open()
 	defer conn.Close()
-	var msgs []MessageSpec
+	var msgs []messageSpec
 
-	if err := conn.Find(&msgs).Error; err == nil {
-		messageSpecs := []spec.MessageSpec{}
+	messageSpecs := []spec.MessageSpec{}
+	err := conn.Find(&msgs).Error
 
-		for _, m := range msgs {
-			msg := transformToMsg(m)
-			messageSpecs = append(messageSpecs, msg)
-		}
-
-		return messageSpecs, nil
-	} else {
-		return []spec.MessageSpec{}, err
+	if err != nil {
+		return messageSpecs, err
 	}
+
+	for _, m := range msgs {
+		msg := transformToMsg(m)
+		messageSpecs = append(messageSpecs, msg)
+	}
+
+	return messageSpecs, nil
 }
 
+//FindByExchange finds all messages for a exchange
 func (r *MessagesRepo) FindByExchange(exchange string) ([]spec.MessageSpec, error) {
 	conn := r.db.Open()
 	defer conn.Close()
-	var msgs []MessageSpec
+	var msgs []messageSpec
 
-	if err := conn.Where(&MessageSpec{Exchange: exchange}).Find(&msgs).Error; err == nil {
-		messageSpecs := []spec.MessageSpec{}
-
-		for _, m := range msgs {
-			msg := transformToMsg(m)
-			messageSpecs = append(messageSpecs, msg)
-		}
-
-		return messageSpecs, nil
-	} else {
+	err := conn.Where(&messageSpec{Exchange: exchange}).Find(&msgs).Error
+	if err != nil {
 		return []spec.MessageSpec{}, err
 	}
+
+	messageSpecs := []spec.MessageSpec{}
+
+	for _, m := range msgs {
+		msg := transformToMsg(m)
+		messageSpecs = append(messageSpecs, msg)
+	}
+
+	return messageSpecs, nil
 }
+
+// Update a message spec
 func (r *MessagesRepo) Update(msg spec.MessageSpec) error {
 	conn := r.db.Open()
 	defer conn.Close()
 
-	if m, err := transformMsg(msg); err != nil {
+	m, err := transformMsg(msg)
+	if err != nil {
 		return err
-	} else {
-		return conn.Save(&m).Error
 	}
+
+	return conn.Save(&m).Error
 }

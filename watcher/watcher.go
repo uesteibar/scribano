@@ -10,6 +10,7 @@ import (
 	"github.com/uesteibar/scribano/storage/db"
 )
 
+// Config for the Watcher
 type Config struct {
 	Host         string
 	RoutingKey   string
@@ -17,10 +18,12 @@ type Config struct {
 	ExchangeType string
 }
 
+// Watcher orchestrates consuming, analyzing and persisting amqp messages
 type Watcher struct {
 	Config Config
 }
 
+// New creates a new watcher for the given config
 func New(c Config) Watcher {
 	return Watcher{Config: c}
 }

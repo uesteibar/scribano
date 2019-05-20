@@ -13,6 +13,7 @@ func failOnError(err error, msg string) {
 	}
 }
 
+// Consumer consumes messages matching a given rabbitmq routing key
 type Consumer struct {
 	Host         string
 	RoutingKey   string
@@ -21,6 +22,7 @@ type Consumer struct {
 	Ch           chan Message
 }
 
+// Message is a message consumed from rabbitmq
 type Message struct {
 	Body        []byte
 	ContentType string
@@ -37,6 +39,7 @@ func (c *Consumer) transformMessage(msg amqp.Delivery) Message {
 	}
 }
 
+// Consume messages from rabbitmq
 func (c *Consumer) Consume() {
 	conn, err := amqp.Dial(c.Host)
 	failOnError(err, "Failed to connect to RabbitMQ")
