@@ -13,7 +13,7 @@ FROM build_base AS server_builder
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
 
-FROM alpine
+FROM alpine:3.9
 
 RUN apk add --no-cache ca-certificates
 COPY --from=server_builder /go/src/github.com/uesteibar/scribano/scribano .
