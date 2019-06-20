@@ -61,7 +61,7 @@ func (c *Consumer) Consume() {
 	q, err := ch.QueueDeclare(
 		fmt.Sprintf("scribano_watcher_%s", c.Exchange),
 		false, // durable
-		false, // delete when usused
+		true,  // delete when usused
 		false, // exclusive
 		false, // no-wait
 		nil,   // arguments
