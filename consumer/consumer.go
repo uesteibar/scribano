@@ -28,6 +28,7 @@ type Message struct {
 	ContentType string
 	RoutingKey  string
 	Exchange    string
+	Delivery    amqp.Delivery
 }
 
 func (c *Consumer) transformMessage(msg amqp.Delivery) Message {
@@ -36,6 +37,7 @@ func (c *Consumer) transformMessage(msg amqp.Delivery) Message {
 		ContentType: msg.ContentType,
 		RoutingKey:  msg.RoutingKey,
 		Exchange:    c.Exchange,
+		Delivery:    msg,
 	}
 }
 
@@ -79,7 +81,7 @@ func (c *Consumer) Consume() {
 	msgs, err := ch.Consume(
 		q.Name, // queue
 		"",     // consumer
-		true,   // auto-ack
+		false,  // auto-ack
 		false,  // exclusive
 		false,  // no-local
 		false,  // no-wait

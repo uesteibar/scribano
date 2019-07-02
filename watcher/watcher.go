@@ -55,6 +55,7 @@ func (w Watcher) Watch() {
 
 	for msg := range chPersisted {
 		log.Printf("INFO Persisted: %+v", msg)
+		msg.Delivery.Ack(true)
 	}
 
 	log.Printf("INFO finished running watcher")

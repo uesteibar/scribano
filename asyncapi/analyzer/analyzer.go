@@ -61,6 +61,7 @@ func (a *Analyzer) buildModel(msg consumer.Message) (spec.MessageSpec, error) {
 		Topic:    msg.RoutingKey,
 		Exchange: msg.Exchange,
 		Payload:  p,
+		Delivery: msg.Delivery,
 	}, nil
 }
 

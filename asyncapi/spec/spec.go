@@ -1,10 +1,15 @@
 package spec
 
+import (
+	"github.com/streadway/amqp"
+)
+
 // MessageSpec represents a message in the asyncapi spec
 type MessageSpec struct {
 	Topic    string
 	Exchange string
 	Payload  PayloadSpec
+	Delivery amqp.Delivery
 }
 
 // PayloadSpec represents a payload (message body) in the asyncapi spec
