@@ -41,7 +41,7 @@ func main() {
 	}
 
 	for _, c := range configs {
-		w := watcher.New(c)
+		w := watcher.New(c, 5) // consume 5% of messages
 		go w.Watch()
 
 	}

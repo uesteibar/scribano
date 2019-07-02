@@ -20,12 +20,13 @@ type Config struct {
 
 // Watcher orchestrates consuming, analyzing and persisting amqp messages
 type Watcher struct {
-	Config Config
+	Config        Config
+	ConsumerRatio int
 }
 
 // New creates a new watcher for the given config
-func New(c Config) Watcher {
-	return Watcher{Config: c}
+func New(c Config, consumerRatio int) Watcher {
+	return Watcher{Config: c, ConsumerRatio: consumerRatio}
 }
 
 // Watch the amqp server for incoming messages and store the spec
@@ -39,6 +40,7 @@ func (w Watcher) Watch() {
 		Exchange:     w.Config.Exchange,
 		ExchangeType: w.Config.ExchangeType,
 		Ch:           chConsumed,
+		ConsumeRatio: w.ConsumerRatio,
 	}
 
 	go c.Consume()

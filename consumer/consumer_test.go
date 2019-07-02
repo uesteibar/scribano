@@ -35,6 +35,7 @@ func TestConsumer_Topic(t *testing.T) {
 		Exchange:     exchange,
 		ExchangeType: "topic",
 		Ch:           ch,
+		ConsumeRatio: 100,
 	}
 
 	go c.Consume()
@@ -63,6 +64,7 @@ func TestConsumer_Direct(t *testing.T) {
 		Exchange:     exchange,
 		ExchangeType: "direct",
 		Ch:           ch,
+		ConsumeRatio: 100,
 	}
 
 	go c.Consume()
@@ -89,6 +91,7 @@ func TestConsumer_Fanout(t *testing.T) {
 		Exchange:     exchange,
 		ExchangeType: "fanout",
 		Ch:           ch,
+		ConsumeRatio: 100,
 	}
 
 	go c.Consume()

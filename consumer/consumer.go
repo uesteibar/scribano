@@ -3,6 +3,7 @@ package consumer
 import (
 	"fmt"
 	"log"
+	"math/rand"
 
 	"github.com/streadway/amqp"
 )
@@ -20,6 +21,7 @@ type Consumer struct {
 	Exchange     string
 	ExchangeType string
 	Ch           chan Message
+	ConsumeRatio int
 }
 
 // Message is a message consumed from rabbitmq
@@ -93,6 +95,13 @@ func (c *Consumer) Consume() {
 
 	for d := range msgs {
 		log.Printf("Received: %+v", d)
-		c.Ch <- c.transformMessage(d)
+		probability := rand.Intn(100)
+		if probability < c.ConsumeRatio {
+			log.Printf("Consuming: %+v", d)
+			c.Ch <- c.transformMessage(d)
+		} else {
+			log.Printf("Ignoring: %+v", d)
+			d.Ack(false)
+		}
 	}
 }
